@@ -2,6 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Tenancy\EditWorkspace;
+use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use App\Filament\Pages\Tenancy\RegisterWorkspace;
+use App\Http\Middleware\ApplyTenantScopes;
+use App\Models\Workspace;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -31,6 +37,12 @@ class AppPanelProvider extends PanelProvider
             ->passwordReset()
             ->emailVerification()
             ->profile()
+            ->tenant(Workspace::class)
+            ->tenantMiddleware([
+                ApplyTenantScopes::class,
+            ], isPersistent: true)
+            ->tenantRegistration(RegisterWorkspace::class)
+            ->tenantProfile(EditWorkspace::class)
             ->colors([
                 'primary' => Color::Emerald,
             ])
