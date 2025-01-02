@@ -26,7 +26,8 @@
         "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-faker": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0",
-        "pestphp/pest-plugin-livewire": "^3.0"
+        "pestphp/pest-plugin-livewire": "^3.0",
+        "pestphp/pest-plugin-type-coverage": "^3.2"
     },
     "autoload": {
         "psr-4": {
@@ -60,6 +61,23 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "lint": [
+            "pint"
+        ],
+        "test:lint": [
+            "pint --test"
+        ],
+        "test:types": [
+            "phpstan analyse --memory-limit=2G --error-format=table"
+        ],
+        "test:type-coverage": "pest --type-coverage --min=100",
+        "test:unit": "pest --parallel --ci --coverage --min=100.0",
+        "test": [
+            "@composer test:lint",
+            "@composer test:types",
+            "@composer test:type-coverage",
+            "@composer test:unit"
         ]
     },
     "extra": {
