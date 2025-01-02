@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Exception;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
@@ -14,7 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasTenants
+final class User extends Authenticatable implements FilamentUser, HasTenants, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -41,38 +44,23 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
-    /**
-     * @param \Filament\Panel $panel
-     * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function canAccessPanel(Panel $panel): bool
     {
-//        if ($panel->getId() === 'auth') {
-//            return true;
-//        }
-//
-//        if ($panel->getId() === 'app' && $this->role->name === 'authenticated_user') {
-//            return true;
-//        }
-//
-//        if ($panel->getId() === 'admin' && in_array($this->role->name, ['superadmin', 'admin'])) {
-//            return true;
-//        }
-//
-//        return false;
+        //        if ($panel->getId() === 'auth') {
+        //            return true;
+        //        }
+        //
+        //        if ($panel->getId() === 'app' && $this->role->name === 'authenticated_user') {
+        //            return true;
+        //        }
+        //
+        //        if ($panel->getId() === 'admin' && in_array($this->role->name, ['superadmin', 'admin'])) {
+        //            return true;
+        //        }
+        //
+        //        return false;
 
         return true;
     }
@@ -98,5 +86,18 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
             'superadmin', 'admin' => Filament::getPanel('admin')->getUrl(),
             default => Filament::getPanel('app')->getUrl(),
         };
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 }

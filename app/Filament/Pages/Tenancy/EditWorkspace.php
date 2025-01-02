@@ -8,7 +8,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
 
-class EditWorkspace extends EditTenantProfile
+final class EditWorkspace extends EditTenantProfile
 {
     public static function getLabel(): string
     {

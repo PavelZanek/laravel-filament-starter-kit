@@ -9,7 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
 
-class RegisterWorkspace extends RegisterTenant
+final class RegisterWorkspace extends RegisterTenant
 {
     public static function getLabel(): string
     {

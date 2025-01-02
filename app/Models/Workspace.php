@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Workspace extends Model
+final class Workspace extends Model
 {
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function users(): BelongsToMany

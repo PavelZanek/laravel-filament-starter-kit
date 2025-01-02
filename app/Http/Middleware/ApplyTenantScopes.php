@@ -1,29 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApplyTenantScopes
+final class ApplyTenantScopes
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-//        Category::addGlobalScope(
-//            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
-//        );
-//        Tag::addGlobalScope(
-//            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
-//        );
-//        Product::addGlobalScope(
-//            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
-//        );
+        //        Category::addGlobalScope(
+        //            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
+        //        );
+        //        Tag::addGlobalScope(
+        //            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
+        //        );
+        //        Product::addGlobalScope(
+        //            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
+        //        );
 
         return $next($request);
     }

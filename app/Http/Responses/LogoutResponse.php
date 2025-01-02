@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Responses;
 
 use Filament\Facades\Filament;
-use Illuminate\Http\RedirectResponse;
 use Filament\Http\Responses\Auth\LogoutResponse as BaseLogout;
+use Illuminate\Http\RedirectResponse;
 
-class LogoutResponse extends BaseLogout
+final class LogoutResponse extends BaseLogout
 {
     public function toResponse($request): RedirectResponse
     {

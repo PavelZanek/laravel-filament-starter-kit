@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
@@ -8,7 +10,7 @@ use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -36,12 +38,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-//        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-//            $switch->locales(['cs','en'])
-//                ->flags([
-//                    'cs' => __('common.flags.cs'),
-//                    'en' => __('common.flags.en'),
-//                ]);
-//        });
+        //        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        //            $switch->locales(['cs','en'])
+        //                ->flags([
+        //                    'cs' => __('common.flags.cs'),
+        //                    'en' => __('common.flags.en'),
+        //                ]);
+        //        });
     }
 }
