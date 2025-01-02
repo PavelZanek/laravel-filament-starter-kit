@@ -5,5 +5,6 @@ return [
     App\Providers\Filament\AdminPanelProvider::class,
     App\Providers\Filament\AppPanelProvider::class,
     App\Providers\Filament\AuthPanelProvider::class,
+    App\Providers\HorizonServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
 ];
