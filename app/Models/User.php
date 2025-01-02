@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
@@ -52,8 +53,27 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         ];
     }
 
+    /**
+     * @param \Filament\Panel $panel
+     * @return bool
+     * @throws \Exception
+     */
     public function canAccessPanel(Panel $panel): bool
     {
+//        if ($panel->getId() === 'auth') {
+//            return true;
+//        }
+//
+//        if ($panel->getId() === 'app' && $this->role->name === 'authenticated_user') {
+//            return true;
+//        }
+//
+//        if ($panel->getId() === 'admin' && in_array($this->role->name, ['superadmin', 'admin'])) {
+//            return true;
+//        }
+//
+//        return false;
+
         return true;
     }
 
@@ -70,5 +90,13 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     public function getTenants(Panel $panel): array|Collection
     {
         return $this->workspaces;
+    }
+
+    public function usersPanel(): string
+    {
+        return match (auth()->user()->role) {
+            'superadmin', 'admin' => Filament::getPanel('admin')->getUrl(),
+            default => Filament::getPanel('app')->getUrl(),
+        };
     }
 }

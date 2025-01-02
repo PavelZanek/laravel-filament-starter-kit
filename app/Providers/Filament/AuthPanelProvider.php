@@ -2,12 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Tenancy\EditWorkspace;
-use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use App\Filament\Pages\Tenancy\RegisterWorkspace;
-use App\Http\Middleware\ApplyTenantScopes;
-use App\Models\Workspace;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -24,38 +18,20 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AppPanelProvider extends PanelProvider
+class AuthPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('app')
-            ->path('app')
-            // ->login()
-            // ->registration()
-            // ->passwordReset()
-            // ->emailVerification()
-            ->profile()
-            // ->tenant(Workspace::class)
-            // ->tenantMiddleware([
-            //     ApplyTenantScopes::class,
-            // ], isPersistent: true)
-            // ->tenantRegistration(RegisterWorkspace::class)
-            // ->tenantProfile(EditWorkspace::class)
+            ->id('auth')
+            ->path('')
             ->colors([
                 'primary' => Color::Emerald,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-            ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
+            ->login()
+            ->registration()
+            ->passwordReset()
+            ->emailVerification()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
