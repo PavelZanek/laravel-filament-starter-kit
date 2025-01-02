@@ -12,10 +12,10 @@ final class LogoutResponse extends BaseLogout
 {
     public function toResponse($request): RedirectResponse
     {
-        return redirect()->to(
-            Filament::getPanel('auth')->hasLogin()
-                ? Filament::getPanel('auth')->getLoginUrl()
-                : Filament::getPanel('auth')->getUrl(),
-        );
+        $authUrl = Filament::getPanel('auth')->hasLogin()
+            ? Filament::getPanel('auth')->getLoginUrl()
+            : Filament::getPanel('auth')->getUrl();
+
+        return $authUrl ? redirect()->to($authUrl) : redirect()->route('homepage');
     }
 }

@@ -13,8 +13,12 @@ final class Workspace extends Model
         'name',
     ];
 
+    /**
+     * @return BelongsToMany<User, Workspace>
+     */
     public function users(): BelongsToMany
     {
+        /** @var BelongsToMany<User, Workspace> */
         return $this->belongsToMany(User::class);
     }
 }

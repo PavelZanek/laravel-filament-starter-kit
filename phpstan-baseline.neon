@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Http\\Responses\\LoginResponse\:\:toResponse\(\) never returns Livewire\\Features\\SupportRedirects\\Redirector so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Http/Responses/LoginResponse.php
+
+		-
+			message: '#^Method App\\Http\\Responses\\RegisterResponse\:\:toResponse\(\) never returns Livewire\\Features\\SupportRedirects\\Redirector so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Http/Responses/RegisterResponse.php

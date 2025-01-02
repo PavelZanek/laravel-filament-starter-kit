@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Exception;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
@@ -43,9 +42,6 @@ final class User extends Authenticatable implements FilamentUser, HasTenants, Mu
         'remember_token',
     ];
 
-    /**
-     * @throws Exception
-     */
     public function canAccessPanel(Panel $panel): bool
     {
         //        if ($panel->getId() === 'auth') {
@@ -65,25 +61,36 @@ final class User extends Authenticatable implements FilamentUser, HasTenants, Mu
         return true;
     }
 
+    /**
+     * @return BelongsToMany<Workspace, User>
+     */
     public function workspaces(): BelongsToMany
     {
+        /** @var BelongsToMany<Workspace, User> */
         return $this->belongsToMany(Workspace::class);
     }
 
     public function canAccessTenant(Model $tenant): bool
     {
+        if (! $tenant instanceof Workspace) {
+            return false;
+        }
+
         return $this->workspaces->contains($tenant);
     }
 
-    public function getTenants(Panel $panel): array|Collection
+    /**
+     * @return Collection<int, Workspace>
+     */
+    public function getTenants(Panel $panel): Collection
     {
         return $this->workspaces;
     }
 
-    public function usersPanel(): string
+    public function usersPanel(): ?string
     {
-        return match (auth()->user()->role) {
-            'superadmin', 'admin' => Filament::getPanel('admin')->getUrl(),
+        return match (auth()->user()?->email) {
+            'zanek.pavel@gmail.com', 'admin' => Filament::getPanel('admin')->getUrl(),
             default => Filament::getPanel('app')->getUrl(),
         };
     }
