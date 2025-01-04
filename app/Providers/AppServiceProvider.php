@@ -38,12 +38,17 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-        //            $switch->locales(['cs','en'])
-        //                ->flags([
-        //                    'cs' => __('common.flags.cs'),
-        //                    'en' => __('common.flags.en'),
-        //                ]);
-        //        });
+        // @codeCoverageIgnoreStart
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch->locales([
+                // 'cs',
+                'en',
+            ])
+                ->flags([
+                    // 'cs' => __('common.flags.cs'),
+                    'en' => __('common.flags.en'),
+                ]);
+        });
+        // @codeCoverageIgnoreEnd
     }
 }

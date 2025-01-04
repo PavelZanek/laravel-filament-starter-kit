@@ -19,7 +19,7 @@ final class EditWorkspace extends EditTenantProfile
     {
         return $form
             ->schema([
-                TextInput::make('name'),
+                TextInput::make('name')->required(),
             ]);
     }
 }

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -16,7 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
-final class User extends Authenticatable implements FilamentUser, HasTenants, MustVerifyEmail
+final class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -87,11 +88,16 @@ final class User extends Authenticatable implements FilamentUser, HasTenants, Mu
         return $this->workspaces;
     }
 
+    public function getDefaultTenant(Panel $panel): ?Model
+    {
+        return $this->workspaces->first();
+    }
+
     public function usersPanel(): ?string
     {
         return match (auth()->user()?->email) {
-            'zanek.pavel@gmail.com', 'admin' => Filament::getPanel('admin')->getUrl(),
-            default => Filament::getPanel('app')->getUrl(),
+            'zanek.pavel@gmail.com' => Filament::getPanel('admin')->getUrl(),
+            default => Filament::getPanel('app')->getUrl($this->getDefaultTenant(Filament::getPanel('app'))),
         };
     }
 

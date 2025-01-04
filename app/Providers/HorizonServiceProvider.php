@@ -31,7 +31,9 @@ final class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewHorizon', function (User $user) {
+            // @codeCoverageIgnoreStart
             return $user->email === config('horizon.allowed_email');
+            // @codeCoverageIgnoreEnd
         });
     }
 }

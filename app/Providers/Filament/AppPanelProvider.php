@@ -37,12 +37,12 @@ final class AppPanelProvider extends PanelProvider
             // ->passwordReset()
             // ->emailVerification()
             ->profile()
-            // ->tenant(Workspace::class)
+            ->tenant(Workspace::class)
+            ->tenantRegistration(RegisterWorkspace::class)
+            ->tenantProfile(EditWorkspace::class)
             // ->tenantMiddleware([
             //     ApplyTenantScopes::class,
             // ], isPersistent: true)
-            // ->tenantRegistration(RegisterWorkspace::class)
-            // ->tenantProfile(EditWorkspace::class)
             ->colors([
                 'primary' => Color::Emerald,
             ])

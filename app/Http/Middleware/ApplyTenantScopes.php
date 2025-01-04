@@ -17,16 +17,6 @@ final class ApplyTenantScopes
      */
     public function handle(Request $request, Closure $next): Response
     {
-        //        Category::addGlobalScope(
-        //            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
-        //        );
-        //        Tag::addGlobalScope(
-        //            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
-        //        );
-        //        Product::addGlobalScope(
-        //            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
-        //        );
-
         return $next($request);
     }
 }

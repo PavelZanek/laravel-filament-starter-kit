@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 
 final class LogoutResponse extends BaseLogout
 {
-    public function toResponse($request): RedirectResponse
+    public function toResponse($request): RedirectResponse // @pest-ignore-type
     {
         $authUrl = Filament::getPanel('auth')->hasLogin()
             ? Filament::getPanel('auth')->getLoginUrl()

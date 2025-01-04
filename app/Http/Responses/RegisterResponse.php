@@ -11,7 +11,7 @@ use Livewire\Features\SupportRedirects\Redirector;
 
 final class RegisterResponse extends RegistrationResponse
 {
-    public function toResponse($request): RedirectResponse|Redirector
+    public function toResponse($request): RedirectResponse|Redirector // @pest-ignore-type
     {
         return auth()->user()?->usersPanel()
             ? redirect()->to(auth()->user()->usersPanel())

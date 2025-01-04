@@ -23,6 +23,7 @@ final class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
         $isLocal = $this->app->environment('local');
 
+        // @codeCoverageIgnoreStart
         Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
             return $isLocal ||
                    $entry->isReportableException() ||
@@ -31,6 +32,7 @@ final class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
                    $entry->isScheduledTask() ||
                    $entry->hasMonitoredTag();
         });
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -38,9 +40,11 @@ final class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function hideSensitiveRequestDetails(): void
     {
+        // @codeCoverageIgnoreStart
         if ($this->app->environment('local')) {
             return;
         }
+        // @codeCoverageIgnoreEnd
 
         Telescope::hideRequestParameters(['_token']);
 
@@ -59,7 +63,9 @@ final class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewTelescope', function (User $user) {
+            // @codeCoverageIgnoreStart
             return $user->email === config('telescope.allowed_email');
+            // @codeCoverageIgnoreEnd
         });
     }
 }

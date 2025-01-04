@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\User;
+use App\Models\Workspace;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -42,5 +44,16 @@ final class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Attach workspaces to the user.
+     */
+    public function withWorkspaces(int $count = 1): static
+    {
+        return $this->afterCreating(function (User $user) use ($count) {
+            $workspaces = Workspace::factory()->count($count)->create();
+            $user->workspaces()->attach($workspaces);
+        });
     }
 }
