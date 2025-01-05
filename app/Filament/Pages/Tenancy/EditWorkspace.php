@@ -19,9 +19,8 @@ final class EditWorkspace extends EditTenantProfile
     #[Override]
     public function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                TextInput::make('name')->required(),
-            ]);
+        return $form->schema([
+            TextInput::make('name')->required(),
+        ]);
     }
 }

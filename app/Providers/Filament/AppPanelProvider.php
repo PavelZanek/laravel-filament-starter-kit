@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\EditProfile;
 use App\Filament\Pages\Tenancy\EditWorkspace;
 use App\Filament\Pages\Tenancy\RegisterWorkspace;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Workspace;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -38,7 +41,14 @@ final class AppPanelProvider extends PanelProvider
             // ->registration()
             // ->passwordReset()
             // ->emailVerification()
-            ->profile()
+            // ->profile()
+            ->userMenuItems([
+                'profile' => MenuItem::make()->url(
+                    fn (): string => EditProfile::getUrl(
+                        tenant: Filament::getTenant() ?? auth()->user()?->workspaces->first()
+                    )
+                ),
+            ])
             ->tenant(Workspace::class)
             ->tenantRegistration(RegisterWorkspace::class)
             ->tenantProfile(EditWorkspace::class)
