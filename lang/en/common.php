@@ -40,4 +40,8 @@ return [
             ],
         ],
     ],
+    'footer' => [
+        'created_by' => 'Created by',
+        'rights' => 'All rights reserved',
+    ],
 ];

@@ -40,4 +40,8 @@ return [
             ],
         ],
     ],
+    'footer' => [
+        'created_by' => 'Vytvořil',
+        'rights' => 'Všechna práva vyhrazena',
+    ],
 ];
