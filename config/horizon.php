@@ -18,7 +18,6 @@ return [
     */
 
     'domain' => env('HORIZON_DOMAIN'),
-    'allowed_email' => env('HORIZON_ALLOWED_EMAIL'),
 
     /*
     |--------------------------------------------------------------------------

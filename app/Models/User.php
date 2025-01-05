@@ -45,21 +45,11 @@ final class User extends Authenticatable implements FilamentUser, HasDefaultTena
 
     public function canAccessPanel(Panel $panel): bool
     {
-        //        if ($panel->getId() === 'auth') {
-        //            return true;
-        //        }
-        //
-        //        if ($panel->getId() === 'app' && $this->role->name === 'authenticated_user') {
-        //            return true;
-        //        }
-        //
-        //        if ($panel->getId() === 'admin' && in_array($this->role->name, ['superadmin', 'admin'])) {
-        //            return true;
-        //        }
-        //
-        //        return false;
+        if ($panel->getId() === 'auth' || $panel->getId() === 'app') {
+            return true;
+        }
 
-        return true;
+        return $panel->getId() === 'admin' && $this->email === config('project.admin.allowed_email');
     }
 
     /**

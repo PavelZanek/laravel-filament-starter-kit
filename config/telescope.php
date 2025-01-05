@@ -19,7 +19,6 @@ return [
     */
 
     'enabled' => env('TELESCOPE_ENABLED', true),
-    'allowed_email' => env('TELESCOPE_ALLOWED_EMAIL'),
 
     /*
     |--------------------------------------------------------------------------

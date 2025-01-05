@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use App\Models\Workspace;
 use Filament\Panel;
+use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\actingAs;
 
@@ -27,11 +28,29 @@ it('may have workspaces', function (): void {
     expect($user->workspaces)->toHaveCount(3);
 });
 
-test('can access panel', function (): void {
+test('can access app panel', function (): void {
     $user = User::factory()->withWorkspaces()->create();
-    $panel = mock(Panel::class);
+    $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('app')->getMock();
 
     expect($user->canAccessPanel($panel))->toBeTrue();
+});
+
+test('can access admin panel', function (): void {
+    Config::set('project.admin.allowed_email', 'allowed@example.com');
+
+    $user = User::factory()->withWorkspaces()->create(['email' => 'allowed@example.com']);
+    $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('admin')->getMock();
+
+    expect($user->canAccessPanel($panel))->toBeTrue();
+});
+
+test('denies user with disallowed email to view admin panel', function (): void {
+    Config::set('project.admin.allowed_email', 'allowed@example.com');
+
+    $user = User::factory()->withWorkspaces()->create(['email' => 'disallowed@example.com']);
+    $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('admin')->getMock();
+
+    expect($user->canAccessPanel($panel))->toBeFalse();
 });
 
 test('cannot access invalid tenant', function (): void {
