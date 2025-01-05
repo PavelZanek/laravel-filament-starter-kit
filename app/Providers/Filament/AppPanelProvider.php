@@ -32,6 +32,8 @@ final class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
+            ->databaseTransactions()
+            ->spa()
             ->login()
             // ->registration()
             // ->passwordReset()

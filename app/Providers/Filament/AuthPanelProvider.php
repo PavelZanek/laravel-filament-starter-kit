@@ -25,6 +25,8 @@ final class AuthPanelProvider extends PanelProvider
         return $panel
             ->id('auth')
             ->path('')
+            ->databaseTransactions()
+            ->spa()
             ->colors([
                 'primary' => Color::Emerald,
             ])
