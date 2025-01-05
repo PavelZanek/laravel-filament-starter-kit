@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
-it('allows requests to pass through the ApplyTenantScopes middleware', function () {
+it('allows requests to pass through the ApplyTenantScopes middleware', function (): void {
     Route::middleware(ApplyTenantScopes::class)->get('/test', function () {
         return response('Test successful');
     });

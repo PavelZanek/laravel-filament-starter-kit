@@ -18,7 +18,7 @@ final class UserFactory extends Factory
     /**
      * The current password being used by the factory.
      */
-    protected static ?string $password;
+    private static ?string $password; // @phpstan-ignore-line
 
     /**
      * Define the model's default state.
@@ -41,7 +41,7 @@ final class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'email_verified_at' => null,
         ]);
     }
@@ -51,7 +51,7 @@ final class UserFactory extends Factory
      */
     public function withWorkspaces(int $count = 1): static
     {
-        return $this->afterCreating(function (User $user) use ($count) {
+        return $this->afterCreating(function (User $user) use ($count): void {
             $workspaces = Workspace::factory()->count($count)->create();
             $user->workspaces()->attach($workspaces);
         });

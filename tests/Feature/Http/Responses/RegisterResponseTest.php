@@ -7,7 +7,7 @@ use Filament\Facades\Filament;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-it('redirects to usersPanel if user has one after registration', function () {
+it('redirects to usersPanel if user has one after registration', function (): void {
     $user = Mockery::mock();
     $user->shouldReceive('usersPanel')->twice()->andReturn('/user-panel');
 
@@ -18,7 +18,7 @@ it('redirects to usersPanel if user has one after registration', function () {
     expect($response->getTargetUrl())->toBe(url('/user-panel'));
 });
 
-it('redirects to Filament URL if user has no usersPanel after registration', function () {
+it('redirects to Filament URL if user has no usersPanel after registration', function (): void {
     $user = Mockery::mock();
     $user->shouldReceive('usersPanel')->once()->andReturn(null);
 

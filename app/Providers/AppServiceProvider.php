@@ -9,12 +9,14 @@ use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 final class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
+    #[Override]
     public function register(): void
     {
         $this->app->singleton(
@@ -39,7 +41,7 @@ final class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // @codeCoverageIgnoreStart
-        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch): void {
             $switch->locales([
                 // 'cs',
                 'en',

@@ -10,7 +10,7 @@ use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Illuminate\Support\Facades\App;
 
-it('registers singleton bindings', function () {
+it('registers singleton bindings', function (): void {
     $loginResponse = App::make(LoginResponse::class);
     $registrationResponse = App::make(RegistrationResponse::class);
     $logoutResponse = App::make(LogoutResponse::class);

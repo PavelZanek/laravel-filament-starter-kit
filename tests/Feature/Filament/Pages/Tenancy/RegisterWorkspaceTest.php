@@ -9,11 +9,11 @@ use App\Models\Workspace;
 use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
-it('returns correct label', function () {
+it('returns correct label', function (): void {
     expect(RegisterWorkspace::getLabel())->toBe('Register workspace');
 });
 
-it('can create a workspace and attaches the user', function () {
+it('can create a workspace and attaches the user', function (): void {
     $user = User::factory()->create();
     actingAs($user);
 
@@ -36,7 +36,7 @@ it('can create a workspace and attaches the user', function () {
         ->and($workspace->users->first()->id)->toBe($user->id);
 });
 
-it('can validate input', function () {
+it('can validate input', function (): void {
     livewire(RegisterWorkspace::class)
         ->fillForm([
             'name' => null,

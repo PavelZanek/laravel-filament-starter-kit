@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 
-it('allows user with allowed email to view Telescope', function () {
+it('allows user with allowed email to view Telescope', function (): void {
     Config::set('telescope.allowed_email', 'allowed@example.com');
 
     $user = User::factory()->create(['email' => 'allowed@example.com']);
@@ -14,7 +14,7 @@ it('allows user with allowed email to view Telescope', function () {
     expect(Gate::allows('viewTelescope', $user))->toBeTrue();
 })->skip();
 
-it('denies user with disallowed email to view Telescope', function () {
+it('denies user with disallowed email to view Telescope', function (): void {
     Config::set('telescope.allowed_email', 'allowed@example.com');
 
     $user = User::factory()->create(['email' => 'disallowed@example.com']);

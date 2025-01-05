@@ -8,6 +8,7 @@ use App\Models\Workspace;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
+use Override;
 
 final class RegisterWorkspace extends RegisterTenant
 {
@@ -16,6 +17,7 @@ final class RegisterWorkspace extends RegisterTenant
         return 'Register workspace';
     }
 
+    #[Override]
     public function form(Form $form): Form
     {
         return $form
@@ -24,6 +26,7 @@ final class RegisterWorkspace extends RegisterTenant
             ]);
     }
 
+    #[Override]
     protected function handleRegistration(array $data): Workspace
     {
         $workspace = Workspace::query()->create($data);

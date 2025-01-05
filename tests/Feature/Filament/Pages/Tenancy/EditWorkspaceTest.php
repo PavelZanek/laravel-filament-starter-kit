@@ -10,11 +10,11 @@ use Filament\Facades\Filament;
 use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
-it('returns correct label', function () {
+it('returns correct label', function (): void {
     expect(EditWorkspace::getLabel())->toBe('Workspace Settings');
 });
 
-it('can edit a workspace', function () {
+it('can edit a workspace', function (): void {
     $user = User::factory()->withWorkspaces()->create();
     actingAs($user);
 
@@ -41,7 +41,7 @@ it('can edit a workspace', function () {
         ->and($workspace->users->first()->id)->toBe($user->id);
 });
 
-it('can validate input', function () {
+it('can validate input', function (): void {
     $user = User::factory()->withWorkspaces()->create();
     actingAs($user);
 

@@ -11,10 +11,8 @@ final class FakeUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         User::factory(150)->withWorkspaces()->create();
     }
