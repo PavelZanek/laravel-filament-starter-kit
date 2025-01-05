@@ -22,7 +22,7 @@ test('to array', function (): void {
 });
 
 it('may have workspaces', function (): void {
-    $user = User::factory()->hasWorkspaces(3)->create();
+    $user = User::factory()->withWorkspaces(3)->create();
 
     expect($user->workspaces)->toHaveCount(3);
 });
