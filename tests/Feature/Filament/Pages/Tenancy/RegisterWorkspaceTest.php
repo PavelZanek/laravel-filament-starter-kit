@@ -10,7 +10,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 it('returns correct label', function (): void {
-    expect(RegisterWorkspace::getLabel())->toBe('Register workspace');
+    expect(RegisterWorkspace::getLabel())->toBe(__('common.workspaces.labels.register'));
 });
 
 it('can create a workspace and attaches the user', function (): void {

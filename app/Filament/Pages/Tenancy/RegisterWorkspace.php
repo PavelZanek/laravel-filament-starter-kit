@@ -14,7 +14,7 @@ final class RegisterWorkspace extends RegisterTenant
 {
     public static function getLabel(): string
     {
-        return 'Register workspace';
+        return __('common.workspaces.labels.register');
     }
 
     #[Override]
@@ -22,7 +22,9 @@ final class RegisterWorkspace extends RegisterTenant
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
+                TextInput::make('name')
+                    ->label(__('common.workspaces.fields.name'))
+                    ->required(),
             ]);
     }
 

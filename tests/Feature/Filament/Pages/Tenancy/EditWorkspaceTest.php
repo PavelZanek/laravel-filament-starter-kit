@@ -11,7 +11,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 it('returns correct label', function (): void {
-    expect(EditWorkspace::getLabel())->toBe('Workspace Settings');
+    expect(EditWorkspace::getLabel())->toBe(__('common.workspaces.labels.settings'));
 });
 
 it('can edit a workspace', function (): void {

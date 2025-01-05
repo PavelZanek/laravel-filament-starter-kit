@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -54,7 +55,7 @@ final class UserFactory extends Factory
         return $this->afterCreating(function (User $user) use ($count): void {
             $workspaces = Workspace::factory()
                 ->count($count)
-                ->sequence(fn ($sequence) => ['name' => 'Workspace ' . ($sequence->index + 1)])
+                ->sequence(fn (Sequence $sequence): array => ['name' => 'Workspace '.($sequence->index + 1)])
                 ->create();
 
             $user->workspaces()->attach($workspaces);

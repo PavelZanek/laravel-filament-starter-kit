@@ -18,6 +18,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Override;
 
 final class EditProfile extends Page implements HasForms
 {
@@ -44,16 +45,24 @@ final class EditProfile extends Page implements HasForms
         $this->fillForms();
     }
 
+    #[Override]
+    public function getHeading(): string
+    {
+        return __('common.edit_profile.heading');
+    }
+
     public function editProfileForm(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('Profile Information')
+            Forms\Components\Section::make(__('common.edit_profile.profile.subheading'))
                 ->aside()
-                ->description('Update your account\'s profile information and email address.')
+                ->description(__('common.edit_profile.profile.description'))
                 ->schema([
                     Forms\Components\TextInput::make('name')
+                        ->label(__('common.edit_profile.profile.fields.name'))
                         ->required(),
                     Forms\Components\TextInput::make('email')
+                        ->label(__('common.edit_profile.profile.fields.email'))
                         ->email()
                         ->required()
                         ->unique(ignoreRecord: true),
@@ -82,15 +91,17 @@ final class EditProfile extends Page implements HasForms
     public function editPasswordForm(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('Update Password')
+            Forms\Components\Section::make(__('common.edit_profile.password.subheading'))
                 ->aside()
-                ->description('Ensure your account is using long, random password to stay secure.')
+                ->description(__('common.edit_profile.password.description'))
                 ->schema([
                     Forms\Components\TextInput::make('Current password')
+                        ->label(__('common.edit_profile.password.fields.current_password'))
                         ->password()
                         ->required()
                         ->currentPassword(),
                     Forms\Components\TextInput::make('password')
+                        ->label(__('common.edit_profile.password.fields.new_password'))
                         ->password()
                         ->required()
                         ->rule(Password::default())
@@ -99,6 +110,7 @@ final class EditProfile extends Page implements HasForms
                         ->live(debounce: 500)
                         ->same('passwordConfirmation'),
                     Forms\Components\TextInput::make('passwordConfirmation')
+                        ->label(__('common.edit_profile.password.fields.confirm_password'))
                         ->password()
                         ->required()
                         ->dehydrated(false),
