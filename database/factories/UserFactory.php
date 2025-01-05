@@ -52,7 +52,11 @@ final class UserFactory extends Factory
     public function withWorkspaces(int $count = 1): static
     {
         return $this->afterCreating(function (User $user) use ($count): void {
-            $workspaces = Workspace::factory()->count($count)->create();
+            $workspaces = Workspace::factory()
+                ->count($count)
+                ->sequence(fn ($sequence) => ['name' => 'Workspace ' . ($sequence->index + 1)])
+                ->create();
+
             $user->workspaces()->attach($workspaces);
         });
     }
