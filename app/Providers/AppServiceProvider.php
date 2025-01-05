@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use Filament\Facades\Filament;
+use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
@@ -52,5 +54,7 @@ final class AppServiceProvider extends ServiceProvider
                 ]);
         });
         // @codeCoverageIgnoreEnd
+
+        Authenticate::redirectUsing(fn (): string => Filament::getPanel('auth')->route('auth.login'));
     }
 }

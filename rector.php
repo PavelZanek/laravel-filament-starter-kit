@@ -6,6 +6,7 @@ use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
+use Rector\Transform\Rector\String_\StringToClassConstantRector;
 use Rector\ValueObject\PhpVersion;
 use RectorLaravel\Set\LaravelLevelSetList;
 
@@ -23,6 +24,10 @@ return static function (RectorConfig $rectorConfig): void {
     // Skip specific rules
     $rectorConfig->skip([
         // CompactToVariablesRector::class,
+        StringToClassConstantRector::class => [
+            __DIR__.'/routes/web.php',
+            __DIR__.'/app/Providers/AppServiceProvider.php',
+        ],
     ]);
 
     // Enable caching for Rector
