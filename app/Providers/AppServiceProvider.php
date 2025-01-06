@@ -10,6 +10,10 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
 use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -56,5 +60,42 @@ final class AppServiceProvider extends ServiceProvider
         // @codeCoverageIgnoreEnd
 
         Authenticate::redirectUsing(fn (): string => Filament::getPanel('auth')->route('auth.login'));
+
+        $this->configureCommands();
+        $this->configureModels();
+        $this->configureUrl();
+        $this->configureVite();
+    }
+
+    /*
+     * Configure the application's commands.
+     */
+    private function configureCommands(): void
+    {
+        DB::prohibitDestructiveCommands($this->app->isProduction());
+    }
+
+    /*
+     * Configure the application's models.
+     */
+    private function configureModels(): void
+    {
+        Model::shouldBeStrict();
+    }
+
+    /*
+     * Configure the application's URL.
+     */
+    private function configureUrl(): void
+    {
+        URL::forceHttps($this->app->isProduction());
+    }
+
+    /*
+     * Configure the application's Vite.
+     */
+    private function configureVite(): void
+    {
+        Vite::useAggressivePrefetching();
     }
 }
