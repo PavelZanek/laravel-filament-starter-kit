@@ -25,7 +25,7 @@ test('to array', function (): void {
 it('may have workspaces', function (): void {
     $user = User::factory()->withWorkspaces(3)->create();
 
-    expect($user->workspaces)->toHaveCount(3);
+    expect($user->workspaces)->toHaveCount(4); // 1 created in User::booted()
 });
 
 test('can access app panel', function (): void {
@@ -69,11 +69,13 @@ test('can access valid tenant', function (): void {
 });
 
 test('get tenants returns workspaces', function (): void {
-    $user = User::factory()->create();
-    $workspace1 = Workspace::factory()->create();
+    $user = User::factory()->create()->fresh();
+    $workspace1 = $user->workspaces->first(); // created in User::booted()
     $workspace2 = Workspace::factory()->create();
 
-    $user->workspaces()->attach([$workspace1->id, $workspace2->id]);
+    $user->workspaces()->attach([$workspace2->id]);
+
+    $user->refresh();
 
     $panel = mock(Panel::class);
 

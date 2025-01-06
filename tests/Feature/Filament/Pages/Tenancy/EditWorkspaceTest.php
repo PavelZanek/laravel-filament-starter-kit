@@ -35,6 +35,8 @@ it('can edit a workspace', function (): void {
         ->call('save')
         ->assertHasNoFormErrors();
 
+    $workspace->load('users');
+
     expect($workspace->refresh())->toBeInstanceOf(Workspace::class)
         ->and($workspace->name)->toBe($newData->name)
         ->and($workspace->users)->toHaveCount(1)

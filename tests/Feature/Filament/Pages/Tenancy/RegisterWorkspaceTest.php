@@ -14,7 +14,7 @@ it('returns correct label', function (): void {
 });
 
 it('can create a workspace and attaches the user', function (): void {
-    $user = User::factory()->create();
+    $user = User::factory()->withWorkspaces()->create();
     actingAs($user);
 
     $newData = Workspace::factory()->make();
@@ -30,7 +30,8 @@ it('can create a workspace and attaches the user', function (): void {
         'name' => $newData->name,
     ]);
 
-    expect($workspace = Workspace::query()->firstOrFail())->toBeInstanceOf(Workspace::class)
+    expect($workspace = Workspace::query()->where('name', $newData->name)->first())
+        ->toBeInstanceOf(Workspace::class)
         ->and($workspace->name)->toBe($newData->name)
         ->and($workspace->users)->toHaveCount(1)
         ->and($workspace->users->first()->id)->toBe($user->id);

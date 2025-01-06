@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Override;
 
 final class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants, MustVerifyEmail
 {
@@ -89,6 +90,16 @@ final class User extends Authenticatable implements FilamentUser, HasDefaultTena
             'zanek.pavel@gmail.com' => Filament::getPanel('admin')->getUrl(),
             default => Filament::getPanel('app')->getUrl($this->getDefaultTenant(Filament::getPanel('app'))),
         };
+    }
+
+    #[Override]
+    protected static function booted(): void
+    {
+        self::created(function (User $user): void {
+            $user->workspaces()->attach(Workspace::query()->create([
+                'name' => $user->name."'s Workspace",
+            ]));
+        });
     }
 
     /**
