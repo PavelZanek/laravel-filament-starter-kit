@@ -95,7 +95,7 @@ final class EditProfile extends Page implements HasForms
                 ->aside()
                 ->description(__('common.edit_profile.password.description'))
                 ->schema([
-                    Forms\Components\TextInput::make('Current password')
+                    Forms\Components\TextInput::make('currentPassword')
                         ->label(__('common.edit_profile.password.fields.current_password'))
                         ->password()
                         ->required()
@@ -125,6 +125,8 @@ final class EditProfile extends Page implements HasForms
         try {
             /** @var array<string, mixed> $data */
             $data = $this->editPasswordForm->getState(); // @phpstan-ignore-line
+
+            unset($data['currentPassword'], $data['passwordConfirmation']);
 
             $this->handleRecordUpdate($this->getUser(), $data);
         } catch (Halt $exception) {

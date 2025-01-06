@@ -55,7 +55,7 @@ it('can update password', function (): void {
 
     livewire(EditProfile::class)
         ->fillForm([
-            'Current password' => 'old-password',
+            'currentPassword' => 'old-password',
             'password' => $newPassword,
             'passwordConfirmation' => $newPassword,
         ], 'editPasswordForm')
@@ -71,13 +71,13 @@ it('validates password input', function (): void {
 
     livewire(EditProfile::class)
         ->fillForm([
-            'Current password' => 'wrong-password',
+            'currentPassword' => 'wrong-password',
             'password' => 'short',
             'passwordConfirmation' => 'different',
         ], 'editPasswordForm')
         ->call('updatePassword')
         ->assertHasFormErrors([
-            'Current password' => 'current_password',
+            'currentPassword' => 'current_password',
             // 'password' => ['min', 'password'], // TODO
             // 'passwordConfirmation' => 'same', // TODO
         ], 'editPasswordForm');
