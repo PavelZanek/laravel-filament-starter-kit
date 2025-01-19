@@ -1,66 +1,168 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Below is an updated **README.md** reflecting your recent notes and clarifications. Feel free to adjust any sections to fit your exact preferences.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+# Laravel Filament Starter Kit
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This repository is a **Starter Kit** (sometimes referred to as a Boilerplate or Skeleton) for **Laravel 11.x**, **Filament v3**, and several developer-focused tools. Its goal is to provide a clean yet robust foundation for building complex Laravel applications.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+> **Note**: This project is still evolving. Use it as a starting point or contribute via pull requests to make it better!
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Overview
 
-## Learning Laravel
+- **Laravel 11.x** using [Laravel Sail](https://laravel.com/docs/sail) for local containerized development (but feel free to adapt for other environments such as Herd, etc.).
+- **Filament v3** pre-installed with multiple panels (Auth, App, Admin) and a custom language switcher.
+- **Livewire v3**, **Alpine.js**, and **Tailwind CSS** for interactive frontend components.
+- **Database transactions** enabled by default for Filament actions.
+- **Database notifications** enabled by default for Filament.
+- **SPA (Single Page App)** mode for Filament also enabled by default.
+- **Localization** with English and Czech languages pre-configured.
+- **Custom Edit Profile** page with a layout similar to Jetstream.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## What's Included
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Dev Tools**
+    - [Laravel Telescope](https://laravel.com/docs/telescope)
+    - [Laravel Horizon](https://laravel.com/docs/horizon)
+    - [Debugbar (barryvdh/laravel-debugbar)](https://github.com/barryvdh/laravel-debugbar)
+    - [Sentry](https://docs.sentry.io/platforms/php/guides/laravel/)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Testing & Code Quality**
+    - [Pest](https://pestphp.com/) (with coverage tests)
+    - [Larastan](https://github.com/nunomaduro/larastan) (static analysis)
+    - [Rector PHP](https://github.com/rectorphp/rector) (automated refactoring)
+    - [Laravel Pint](https://github.com/laravel/pint) (code style & formatting)
+    - 100% test coverage + 100% type coverage enforced
 
-## Laravel Sponsors
+3. **Docker / Laravel Sail**
+    - Configured via `docker-compose.yml` (included in this repo).
+    - Default setup uses **MariaDB** as the database. You can easily switch to MySQL or another database if you prefer—pull requests welcome to improve compatibility!
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Requirements
 
-### Premium Partners
+- **PHP 8.3+**
+- **Docker** & **Docker Compose** (if using Laravel Sail)
+- [Node.js](https://nodejs.org/) (recommended 18+) & [npm](https://www.npmjs.com/) for frontend assets
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Getting Started
+
+1. **Clone the Repo**
+   ```bash
+   git clone https://github.com/PavelZanek/laravel-filament-starter-kit.git
+   cd laravel-filament-starter-kit
+   ```
+
+2. **Configure Environment**
+    - Copy `.env.example` to `.env` if not already done automatically.
+    - By default, `.env.example` is configured for MariaDB container in Laravel Sail. You can change `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, etc. to match your own setup.
+    - Adjust any other settings you need (cache, mail, debug flags, etc.).
+
+3. **Start Laravel Sail**
+   ```bash
+   ./vendor/bin/sail up -d
+   ```
+   > On Windows, you may need to run:  
+   > `bash vendor/bin/sail up -d`
+
+4. **Install Dependencies**
+   ```bash
+   sail composer install
+   sail npm install
+   ```
+
+5. **Build Frontend Assets**
+   ```bash
+   sail npm run dev
+   ```
+   or
+   ```bash
+   sail npm run build
+   ```
+   for a production build.
+
+6. **Run Migrations & (Optional) Seeds**
+   ```bash
+   sail artisan migrate
+   ```
+   You can further seed data or enable additional features as needed.
+
+Your application should be up and running at [http://localhost](http://localhost) (or the URL/port you configured in the `.env`).
+
+## Filament Panels
+
+This Starter Kit comes with **three** Filament panels configured:
+
+1. **Auth Panel**
+    - Manages authentication flows (login, password reset, etc.).
+
+2. **App Panel**
+    - The main application panel, featuring multi-tenancy via the `Workspace` model.
+
+3. **Admin Panel**
+    - Reserved for super-user and administrative functionality.
+
+## Custom Profile Page
+
+A custom **Edit Profile** page is included, styled to resemble Jetstream’s standard layout. This demonstrates how you can override Filament’s default pages to align with your design.
+
+## User Management
+
+The Starter Kit includes a basic user management system to get you started. Under the hood, it uses Filament Shield package to manage roles and permissions.
+
+### User Resource
+
+- Tabs by default roles (+ all users)
+- Filters
+- Search
+- Soft Delete Logic
+- Export
+
+### Role Resource
+
+- Default roles (super admin, admin, authenticated)
+- One user, one role (but prepared Many-to-Many relation)
+
+## Scripts & Commands
+
+### Running Tests
+
+```bash
+sail composer test
+```
+Runs a full suite that includes:
+
+1. **Rector** (automated refactoring in `--dry-run` mode)
+2. **Laravel Pint** (code style checks)
+3. **Larastan** (static analysis with PHPStan)
+4. **Pest** (with 100% coverage and 100% type coverage checks)
+
+If any step fails, the process will exit with a non-zero code.
+
+Some tests are currently ignored in the test suite. These are primarily related to edge cases or areas requiring further refinement. Contributions are welcome if you'd like to help fine-tune or expand the test coverage and type coverage.
+
+If you're interested in addressing any of these ignored tests, feel free to submit a pull request or open an issue for discussion.
+
+### Other Useful Scripts
+
+- **`sail composer refactro`**: Run Rector in normal (non-dry-run) mode to apply refactoring suggestions.
+- **`sail composer lint`**: Run Pint to automatically fix coding style issues.
+- **`sail composer test:refactor`**: Run Rector in dry-run mode and exit with a non-zero code if any changes are suggested.
+- **`sail composer test:lint`**: Run Pint to check for coding style issues and exit with a non-zero code if any issues are found.
+- **`sail composer test:types`**: Run Larastan to check for static analysis issues and exit with a non-zero code if any issues are found.
+- **`sail composer test:type-coverage`**: Run Pest with type coverage checks and exit with a non-zero code if the type coverage is below 100%.
+- **`sail composer test:unit`**: Run Pest with coverage tests and exit with a non-zero code if the coverage is below 100%.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- I develop using **Laravel Sail** locally, but if you want to adapt the project for [Herd](https://herd.dev/) or any other environment, feel free to open a PR.
+- If you prefer to use **MySQL**, **PostgreSQL**, or any other database instead of **MariaDB**, you can modify the `.env` and `docker-compose.yml` accordingly. PRs for improved compatibility are welcome!
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](LICENSE.md).
+
+Happy coding! And feel free to collaborate on making the **Laravel Filament Starter Kit** even better.
+
+---
+
+If you have any further questions or need additional assistance, please don't hesitate to ask. Good luck with your project! 🚀
