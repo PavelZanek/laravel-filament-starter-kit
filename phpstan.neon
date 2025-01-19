@@ -14,3 +14,10 @@ parameters:
 	    - bootstrap
 	    - database/factories
 	    - routes
+
+	scanFiles:
+	    - _ide_helper_models.php
+#	    - _ide_helper.php
+#	    - .phpstorm.meta.php
+
+#	checkGenericClassInNonGenericObjectType: false

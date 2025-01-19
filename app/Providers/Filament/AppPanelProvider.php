@@ -9,6 +9,7 @@ use App\Filament\Pages\Tenancy\EditWorkspace;
 use App\Filament\Pages\Tenancy\RegisterWorkspace;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Workspace;
+use Exception;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -30,6 +31,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 final class AppPanelProvider extends PanelProvider
 {
+    /**
+     * @throws Exception
+     */
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -37,6 +41,7 @@ final class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->databaseTransactions()
+            ->databaseNotifications()
             ->spa()
             ->login()
             // ->registration()

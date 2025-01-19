@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -14,9 +15,10 @@ final class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->withWorkspaces(3)->create([
+        $user = User::factory()->withWorkspaces(3)->create([
             'name' => 'Pavel',
             'email' => 'zanek.pavel@gmail.com',
         ]);
+        $user->assignRole(Role::SUPER_ADMIN);
     }
 }

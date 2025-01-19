@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Workspace;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +18,8 @@ use Illuminate\Support\Str;
  */
 final class UserFactory extends Factory
 {
+    use WithoutModelEvents;
+
     /**
      * The current password being used by the factory.
      */
@@ -59,6 +63,28 @@ final class UserFactory extends Factory
                 ->create();
 
             $user->workspaces()->attach($workspaces);
+        });
+    }
+
+    /**
+     * Attach role to the user.
+     */
+    public function withRole(string $roleName = Role::AUTHENTICATED, string $guardName = Role::GUARD_NAME_WEB): static
+    {
+        return $this->afterCreating(function (User $user) use ($roleName, $guardName): void {
+            $role = Role::query()
+                ->where('name', $roleName)
+                ->where('guard_name', $guardName)
+                ->first();
+
+            if (! $role) {
+                $role = Role::factory()->create([
+                    'name' => $roleName,
+                    'guard_name' => $guardName,
+                ]);
+            }
+
+            $user->roles()->sync($role);
         });
     }
 }

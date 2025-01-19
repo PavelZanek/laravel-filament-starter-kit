@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Exception;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasDefaultTenant;
@@ -13,15 +14,20 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Override;
+use Spatie\Permission\Traits\HasRoles;
 
-final class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants, MustVerifyEmail
+/**
+ * @mixin IdeHelperUser
+ */
+class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -44,13 +50,22 @@ final class User extends Authenticatable implements FilamentUser, HasDefaultTena
         'remember_token',
     ];
 
+    /**
+     * @throws Exception
+     */
     public function canAccessPanel(Panel $panel): bool
     {
-        if ($panel->getId() === 'auth' || $panel->getId() === 'app') {
+        if ($panel->getId() === 'auth') {
             return true;
         }
 
-        return $panel->getId() === 'admin' && $this->email === config('project.admin.allowed_email');
+        if ($panel->getId() === 'app'
+            && $this->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN, Role::AUTHENTICATED)
+        ) {
+            return true;
+        }
+
+        return $panel->getId() === 'admin' && $this->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN);
     }
 
     /**
@@ -86,19 +101,22 @@ final class User extends Authenticatable implements FilamentUser, HasDefaultTena
 
     public function usersPanel(): ?string
     {
-        return match (auth()->user()?->email) {
-            'zanek.pavel@gmail.com' => Filament::getPanel('admin')->getUrl(),
-            default => Filament::getPanel('app')->getUrl($this->getDefaultTenant(Filament::getPanel('app'))),
-        };
+        if (auth()->user()?->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN)) {
+            return Filament::getPanel('admin')->getUrl();
+        }
+
+        return Filament::getPanel('app')->getUrl($this->getDefaultTenant(Filament::getPanel('app')));
     }
 
     #[Override]
     protected static function booted(): void
     {
-        self::created(function (User $user): void {
-            $user->workspaces()->attach(Workspace::query()->create([
-                'name' => $user->name."'s Workspace",
-            ]));
+        self::deleted(function (User $user): void {
+            $user->update(['email' => $user->email.'-deleted-'.$user->id]);
+        });
+
+        self::restoring(function (User $user): void {
+            $user->update(['email' => str_replace('-deleted-'.$user->id, '', $user->email)]);
         });
     }
 

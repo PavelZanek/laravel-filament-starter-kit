@@ -31,7 +31,7 @@ final class WorkspaceFactory extends Factory
     public function withUsers(int $count = 1): static
     {
         return $this->afterCreating(function (Workspace $workspace) use ($count): void {
-            $users = User::factory()->count($count)->create();
+            $users = User::factory()->withRole()->count($count)->create();
             $workspace->users()->attach($users);
         });
     }

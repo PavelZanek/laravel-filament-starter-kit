@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\CustomRegister;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -31,7 +32,7 @@ final class AuthPanelProvider extends PanelProvider
                 'primary' => Color::Emerald,
             ])
             ->login()
-            ->registration()
+            ->registration(CustomRegister::class)
             ->passwordReset()
             ->emailVerification()
             ->middleware([

@@ -12,7 +12,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 it('can update profile information', function (): void {
-    $user = User::factory()->withWorkspaces()->create();
+    $user = User::factory()->withWorkspaces()->withRole()->create();
     actingAs($user);
 
     $newData = User::factory()->make();
@@ -35,7 +35,7 @@ it('can update profile information', function (): void {
 });
 
 it('validates profile input', function (): void {
-    $user = User::factory()->withWorkspaces()->create();
+    $user = User::factory()->withWorkspaces()->withRole()->create();
     actingAs($user);
 
     livewire(EditProfile::class)
@@ -48,7 +48,11 @@ it('validates profile input', function (): void {
 });
 
 it('can update password', function (): void {
-    $user = User::factory()->withWorkspaces()->create(['password' => Hash::make('old-password')]);
+    $user = User::factory()
+        ->withWorkspaces()
+        ->withRole()
+        ->create(['password' => Hash::make('old-password')]);
+
     actingAs($user);
 
     $newPassword = 'new-secure-password';
@@ -66,7 +70,11 @@ it('can update password', function (): void {
 });
 
 it('validates password input', function (): void {
-    $user = User::factory()->withWorkspaces()->create(['password' => Hash::make('old-password')]);
+    $user = User::factory()
+        ->withWorkspaces()
+        ->withRole()
+        ->create(['password' => Hash::make('old-password')]);
+
     actingAs($user);
 
     livewire(EditProfile::class)

@@ -14,7 +14,11 @@ it('returns correct label', function (): void {
 });
 
 it('can create a workspace and attaches the user', function (): void {
-    $user = User::factory()->withWorkspaces()->create();
+    $user = User::factory()
+        ->withWorkspaces()
+        ->withRole()
+        ->create();
+
     actingAs($user);
 
     $newData = Workspace::factory()->make();

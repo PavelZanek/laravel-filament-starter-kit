@@ -15,7 +15,7 @@ it('returns correct label', function (): void {
 });
 
 it('can edit a workspace', function (): void {
-    $user = User::factory()->withWorkspaces()->create();
+    $user = User::factory()->withWorkspaces()->withRole()->create();
     actingAs($user);
 
     $workspace = $user->workspaces->firstOrFail();
@@ -44,7 +44,7 @@ it('can edit a workspace', function (): void {
 });
 
 it('can validate input', function (): void {
-    $user = User::factory()->withWorkspaces()->create();
+    $user = User::factory()->withWorkspaces()->withRole()->create();
     actingAs($user);
 
     $workspace = $user->workspaces->firstOrFail();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\Config\RectorConfig;
+use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
 use Rector\Set\ValueObject\SetList;
 use Rector\Transform\Rector\String_\StringToClassConstantRector;
 use Rector\ValueObject\PhpVersion;
@@ -27,6 +28,10 @@ return static function (RectorConfig $rectorConfig): void {
         StringToClassConstantRector::class => [
             __DIR__.'/routes/web.php',
             __DIR__.'/app/Providers/AppServiceProvider.php',
+        ],
+        PrivatizeFinalClassMethodRector::class => [
+            __DIR__.'/app/Filament/Admin/Resources/RoleResource/Pages/CreateRole.php',
+            __DIR__.'/app/Filament/Admin/Resources/RoleResource/Pages/EditRole.php',
         ],
     ]);
 
