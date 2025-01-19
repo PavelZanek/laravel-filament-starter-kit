@@ -1,7 +1,3 @@
-Below is an updated **README.md** reflecting your recent notes and clarifications. Feel free to adjust any sections to fit your exact preferences.
-
----
-
 # Laravel Filament Starter Kit
 
 This repository is a **Starter Kit** (sometimes referred to as a Boilerplate or Skeleton) for **Laravel 11.x**, **Filament v3**, and several developer-focused tools. Its goal is to provide a clean yet robust foundation for building complex Laravel applications.
@@ -144,13 +140,20 @@ If you're interested in addressing any of these ignored tests, feel free to subm
 
 ### Other Useful Scripts
 
-- **`sail composer refactro`**: Run Rector in normal (non-dry-run) mode to apply refactoring suggestions.
+- **`sail composer refactor`**: Run Rector in normal (non-dry-run) mode to apply refactoring suggestions.
 - **`sail composer lint`**: Run Pint to automatically fix coding style issues.
 - **`sail composer test:refactor`**: Run Rector in dry-run mode and exit with a non-zero code if any changes are suggested.
 - **`sail composer test:lint`**: Run Pint to check for coding style issues and exit with a non-zero code if any issues are found.
 - **`sail composer test:types`**: Run Larastan to check for static analysis issues and exit with a non-zero code if any issues are found.
 - **`sail composer test:type-coverage`**: Run Pest with type coverage checks and exit with a non-zero code if the type coverage is below 100%.
 - **`sail composer test:unit`**: Run Pest with coverage tests and exit with a non-zero code if the coverage is below 100%.
+
+## Acknowledgments
+
+Special thanks to the following individuals for their invaluable resources and inspiration:
+
+- [Povilas Korop](https://laraveldaily.com/) for his amazing Laravel courses and [Filament Examples](https://filamentexamples.com/).
+- [Nuno Maduro](https://www.youtube.com/@nunomaduro/streams) for his insightful livestreams on Laravel development and best practices.
 
 ## Contributing
 
