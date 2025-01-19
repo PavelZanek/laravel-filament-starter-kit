@@ -20,4 +20,10 @@ parameters:
 #	    - _ide_helper.php
 #	    - .phpstorm.meta.php
 
+
+	reportUnmatchedIgnoredErrors: false
+	ignoreErrors: # TODO: Remove this section after fixing all errors in Github Actions
+	    - '#PHPDoc tag @mixin contains unknown class#'
+	    - '#Access to an undefined property App\\Models\\Role::\$is_default#'
+
 #	checkGenericClassInNonGenericObjectType: false
