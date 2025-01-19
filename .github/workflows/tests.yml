@@ -72,8 +72,5 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: Dump Autoload
-        run: composer dump-autoload
-
       - name: Tests
         run: composer test
