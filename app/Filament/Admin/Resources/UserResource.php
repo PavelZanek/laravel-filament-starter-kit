@@ -151,7 +151,7 @@ final class UserResource extends Resource
                     ->label(__('common.is_verified'))
                     ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at'))
                     ->nullable()
-                    ->placeholder(__('admin/User-resource.filters.all'))
+                    ->placeholder(__('admin/user-resource.filters.all'))
                     ->trueLabel(__('admin/user-resource.filters.verified'))
                     ->falseLabel(__('admin/user-resource.filters.unverified'))
                     ->queries(

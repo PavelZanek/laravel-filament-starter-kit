@@ -13,8 +13,8 @@ return [
     ],
     'workspaces' => [
         'labels' => [
-            'settings' => 'Nastavení prostoru',
             'register' => 'Vytvořit nový prostor',
+            'settings' => 'Nastavení prostoru',
         ],
         'fields' => [
             'name' => 'Název prostoru',
@@ -54,10 +54,20 @@ return [
     'is_active' => 'Aktivní',
     'is_default' => 'Výchozí',
     'is_verified' => 'Ověřeno',
+    'is_published' => 'Publikováno',
+    'order' => 'Pořadí',
     'formats' => [
         'datetime' => 'd.m.Y H:i',
         'date' => 'd.m.Y',
         'date_string' => 'j. F Y',
     ],
     'export' => 'Export',
+    'blocks' => [
+        'content' => 'Obsah',
+        'add_block' => 'Přidat blok',
+        'heading' => 'Nadpis',
+        'level' => 'Úroveň',
+        'paragraph' => 'Odstavec',
+        'image' => 'Obrázek',
+    ],
 ];

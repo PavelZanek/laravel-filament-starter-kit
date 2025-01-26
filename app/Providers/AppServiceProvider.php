@@ -61,13 +61,14 @@ final class AppServiceProvider extends ServiceProvider
         // @codeCoverageIgnoreStart
         LanguageSwitch::configureUsing(function (LanguageSwitch $switch): void {
             $switch->locales([
-                'cs',
                 'en',
+                'cs',
             ])
                 ->flags([
-                    'cs' => __('common.flags.cs'),
                     'en' => __('common.flags.en'),
-                ]);
+                    'cs' => __('common.flags.cs'),
+                ])
+                ->visible(outsidePanels: true);
         });
         // @codeCoverageIgnoreEnd
 

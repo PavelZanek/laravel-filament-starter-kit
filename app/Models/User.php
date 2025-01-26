@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Content\Post;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
@@ -51,6 +52,25 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     ];
 
     /**
+     * @return BelongsToMany<Workspace, User>
+     */
+    public function workspaces(): BelongsToMany
+    {
+        /** @var BelongsToMany<Workspace, User> */
+        return $this->belongsToMany(Workspace::class);
+    }
+
+    /**
+     * @return BelongsToMany<Post, $this>
+     */
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_user')
+            ->withPivot(['order'])
+            ->withTimestamps();
+    }
+
+    /**
      * @throws Exception
      */
     public function canAccessPanel(Panel $panel): bool
@@ -66,15 +86,6 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         }
 
         return $panel->getId() === 'admin' && $this->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN);
-    }
-
-    /**
-     * @return BelongsToMany<Workspace, User>
-     */
-    public function workspaces(): BelongsToMany
-    {
-        /** @var BelongsToMany<Workspace, User> */
-        return $this->belongsToMany(Workspace::class);
     }
 
     public function canAccessTenant(Model $tenant): bool

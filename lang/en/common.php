@@ -13,8 +13,8 @@ return [
     ],
     'workspaces' => [
         'labels' => [
-            'settings' => 'Register Workspace',
-            'register' => 'Workspace Settings',
+            'register' => 'Register Workspace',
+            'settings' => 'Workspace Settings',
         ],
         'fields' => [
             'name' => 'Workspace Name',
@@ -54,10 +54,20 @@ return [
     'is_active' => 'Active',
     'is_default' => 'Default',
     'is_verified' => 'Verified',
+    'is_published' => 'Published',
+    'order' => 'Order',
     'formats' => [
         'datetime' => 'm/d/Y H:i',
         'date' => 'm/d/Y',
         'date_string' => 'F j, Y',
     ],
     'export' => 'Export',
+    'blocks' => [
+        'content' => 'Content',
+        'add_block' => 'Add Block',
+        'heading' => 'Heading',
+        'level' => 'Level',
+        'paragraph' => 'Paragraph',
+        'image' => 'Image',
+    ],
 ];

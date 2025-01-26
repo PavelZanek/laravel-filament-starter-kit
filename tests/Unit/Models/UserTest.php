@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Content\Post;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Workspace;
@@ -28,6 +29,12 @@ it('may have workspaces', function (): void {
     $user = User::factory()->withWorkspaces(3)->create();
 
     expect($user->workspaces)->toHaveCount(3);
+});
+
+it('may have posts', function (): void {
+    $user = User::factory()->hasAttached(Post::factory()->count(3))->create();
+
+    expect($user->posts)->toHaveCount(3);
 });
 
 test('can always access auth panel', function (): void {
