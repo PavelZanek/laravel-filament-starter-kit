@@ -36,6 +36,7 @@ final class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->databaseTransactions()
             ->databaseNotifications()
+            ->unsavedChangesAlerts()
             ->spa()
             ->login()
             ->colors([

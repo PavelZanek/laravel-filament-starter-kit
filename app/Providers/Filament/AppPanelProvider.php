@@ -43,6 +43,7 @@ final class AppPanelProvider extends PanelProvider
             ->path('app')
             ->databaseTransactions()
             ->databaseNotifications()
+            ->unsavedChangesAlerts()
             ->spa()
             ->login()
             // ->registration()
