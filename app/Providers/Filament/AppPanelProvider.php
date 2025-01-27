@@ -27,6 +27,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 final class AppPanelProvider extends PanelProvider
@@ -51,7 +52,7 @@ final class AppPanelProvider extends PanelProvider
             ->userMenuItems([
                 'profile' => MenuItem::make()->url(
                     fn (): string => EditProfile::getUrl(
-                        tenant: Filament::getTenant() ?? auth()->user()?->workspaces->first()
+                        tenant: Filament::getTenant() ?? Auth::user()?->workspaces->first()
                     )
                 ),
             ])

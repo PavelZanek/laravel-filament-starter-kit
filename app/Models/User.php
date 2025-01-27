@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Override;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -101,7 +102,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     public function usersPanel(): ?string
     {
-        if (auth()->user()?->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN)) {
+        if (Auth::user()?->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN)) {
             return Filament::getPanel('admin')->getUrl();
         }
 
@@ -128,6 +129,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     protected function casts(): array
     {
         return [
+            'deleted_at' => 'datetime',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
