@@ -79,4 +79,11 @@ return [
         'verified' => 'Ověření uživatelé',
         'unverified' => 'Neověření uživatelé',
     ],
+    'widgets' => [
+        'user_stats_overview' => [
+            'all_users' => 'Všichni uživatelé',
+            'admins' => 'Administrátoři',
+            'customers' => 'Zákazníci',
+        ],
+    ],
 ];

@@ -79,4 +79,11 @@ return [
         'verified' => 'Verified Users',
         'unverified' => 'Unverified Users',
     ],
+    'widgets' => [
+        'user_stats_overview' => [
+            'all_users' => 'All Users',
+            'admins' => 'Admins',
+            'customers' => 'Customers',
+        ],
+    ],
 ];
