@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\RoleResource\Pages;
+use App\Helpers\ProjectHelper;
 use App\Models\Role;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use BezhanSalleh\FilamentShield\Forms\ShieldSelectAllToggle;
@@ -148,7 +149,9 @@ final class RoleResource extends Resource implements HasShieldPermissions
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])
+            ->paginated(ProjectHelper::getRecordsPerPageOptions())
+            ->defaultPaginationPageOption(ProjectHelper::getRecordsPerPageDefaultOption());
     }
 
     #[Override]

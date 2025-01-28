@@ -6,6 +6,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Exports\UserExporter;
+use App\Helpers\ProjectHelper;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -299,7 +300,9 @@ final class UserResource extends Resource
             ->bulkActions([
                 //
             ])
-            ->defaultSort('name');
+            ->defaultSort('name')
+            ->paginated(ProjectHelper::getRecordsPerPageOptions())
+            ->defaultPaginationPageOption(ProjectHelper::getRecordsPerPageDefaultOption());
     }
 
     /**
