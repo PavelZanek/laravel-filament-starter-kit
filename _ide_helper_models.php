@@ -15,12 +15,6 @@ namespace App\Models\Content{
 /**
  * 
  *
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property \Carbon\CarbonImmutable|null $deleted_at
  * @property-read \App\Models\Content\TFactory|null $use_factory
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Content\Post> $posts
  * @property-read int|null $posts_count
@@ -29,12 +23,6 @@ namespace App\Models\Content{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category withoutTrashed()
  * @mixin \Eloquent
@@ -47,14 +35,6 @@ namespace App\Models\Content{
 /**
  * 
  *
- * @property int $id
- * @property int|null $user_id
- * @property string $commentable_type
- * @property int $commentable_id
- * @property string $content
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property \Carbon\CarbonImmutable|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Model $commentable
  * @property-read \App\Models\Content\TFactory|null $use_factory
  * @property-read \App\Models\User|null $user
@@ -63,14 +43,6 @@ namespace App\Models\Content{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereCommentableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereCommentableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment withoutTrashed()
  * @mixin \Eloquent
@@ -83,13 +55,8 @@ namespace App\Models\Content{
 /**
  * 
  *
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property \Carbon\CarbonImmutable|null $published_at
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $authors
+ * @property-read int|null $authors_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Content\Category> $categories
  * @property-read int|null $categories_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Content\Comment> $comments
@@ -102,13 +69,6 @@ namespace App\Models\Content{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Post wherePublishedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post withoutTrashed()
  * @mixin \Eloquent
@@ -121,12 +81,6 @@ namespace App\Models\Content{
 /**
  * 
  *
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property \Carbon\CarbonImmutable|null $deleted_at
  * @property-read \App\Models\Content\TFactory|null $use_factory
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Content\Post> $posts
  * @property-read int|null $posts_count
@@ -135,12 +89,6 @@ namespace App\Models\Content{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag withoutTrashed()
  * @mixin \Eloquent
@@ -235,6 +183,8 @@ namespace App\Models{
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Permission> $permissions
  * @property-read int|null $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Content\Post> $posts
+ * @property-read int|null $posts_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Workspace> $workspaces
