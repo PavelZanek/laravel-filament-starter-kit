@@ -100,6 +100,11 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         return $this->workspaces->first();
     }
 
+    public function getActiveTenant(): ?Model
+    {
+        return Filament::getTenant() ?? $this->getDefaultTenant(Filament::getPanel('app'));
+    }
+
     public function usersPanel(): ?string
     {
         if (Auth::user()?->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN)) {

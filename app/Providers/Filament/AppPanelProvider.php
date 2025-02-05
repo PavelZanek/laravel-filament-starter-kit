@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\EditProfile;
 use App\Filament\Pages\Tenancy\EditWorkspace;
 use App\Filament\Pages\Tenancy\RegisterWorkspace;
 use App\Http\Middleware\ApplyTenantScopes;
@@ -50,13 +49,23 @@ final class AppPanelProvider extends PanelProvider
             // ->passwordReset()
             // ->emailVerification()
             // ->profile()
+            // @codeCoverageIgnoreStart
             ->userMenuItems([
-                'profile' => MenuItem::make()->url(
-                    fn (): string => EditProfile::getUrl(
-                        tenant: Filament::getTenant() ?? Auth::user()?->workspaces->first()
-                    )
-                ),
+                'admin' => MenuItem::make()
+                    ->label(__('common.go_to_admin'))
+                    ->icon('heroicon-o-shield-check')
+                    ->visible(fn (): bool => (bool) Auth::user()?->canAccessPanel(Filament::getPanel('admin')))
+                    ->url(fn (): string => Filament::getPanel('admin')->route('pages.dashboard')),
+                'profile' => MenuItem::make()
+                    ->url(
+                        function (): string {
+                            return Filament::getPanel('app')->route('pages.edit-profile', [
+                                'tenant' => Auth::user()?->getActiveTenant(),
+                            ]);
+                        }
+                    ),
             ])
+            // @codeCoverageIgnoreEnd
             ->tenant(Workspace::class)
             ->tenantRegistration(RegisterWorkspace::class)
             ->tenantProfile(EditWorkspace::class)

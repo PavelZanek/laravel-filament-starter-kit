@@ -60,4 +60,6 @@ return [
         'date_string' => 'F j, Y',
     ],
     'export' => 'Export',
+    'go_to_app' => 'Go to App',
+    'go_to_admin' => 'Go to Admin',
 ];

@@ -137,3 +137,32 @@ test('restores email on restore', function (): void {
 
     expect($restoredUser->email)->toBe($originalEmail);
 });
+
+test('getActiveTenant returns Filament tenant if set', function (): void {
+    $user = User::factory()->withWorkspaces()->create();
+
+    actingAs($user);
+    Filament::setTenant($user->workspaces->first());
+
+    expect($user->getActiveTenant())->toBe($user->workspaces->first());
+});
+
+test('getActiveTenant returns default tenant if Filament tenant is not set', function (): void {
+    $user = User::factory()->withWorkspaces()->create();
+
+    actingAs($user);
+    Filament::setTenant(null);
+
+    $defaultTenant = $user->getDefaultTenant(Filament::getPanel('app'));
+
+    expect($user->getActiveTenant())->toBe($defaultTenant);
+});
+
+test('getActiveTenant returns null if user has no workspaces', function (): void {
+    $user = User::factory()->create();
+
+    actingAs($user);
+    Filament::setTenant(null);
+
+    expect($user->getActiveTenant())->toBeNull();
+});

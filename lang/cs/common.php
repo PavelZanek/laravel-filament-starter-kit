@@ -60,4 +60,6 @@ return [
         'date_string' => 'j. F Y',
     ],
     'export' => 'Export',
+    'go_to_app' => 'Přejít do aplikace',
+    'go_to_admin' => 'Přejít do administrace',
 ];
