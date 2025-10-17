@@ -27,6 +27,6 @@ class FilamentAuthenticateRedirect extends BaseAuthenticate
             return null;
         }
 
-        return Filament::getPanel('auth')->route('auth.login');
+        return Filament::getPanel('auth')->route(\Illuminate\Auth\Events\Login::class);
     }
 }

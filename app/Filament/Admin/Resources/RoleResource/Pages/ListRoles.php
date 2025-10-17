@@ -7,7 +7,6 @@ namespace App\Filament\Admin\Resources\RoleResource\Pages;
 use App\Filament\Admin\Resources\RoleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Contracts\Support\Htmlable;
 use Override;
 
 final class ListRoles extends ListRecords
@@ -15,7 +14,7 @@ final class ListRoles extends ListRecords
     protected static string $resource = RoleResource::class;
 
     #[Override] // @phpstan-ignore-line
-    public function getTitle(): string|Htmlable
+    public function getTitle(): string
     {
         return __('admin/role-resource.list.title');
     }

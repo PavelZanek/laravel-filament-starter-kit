@@ -9,7 +9,6 @@ use App\Models\Role;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
 
@@ -18,7 +17,7 @@ final class ListUsers extends ListRecords
     protected static string $resource = UserResource::class;
 
     #[Override] // @phpstan-ignore-line
-    public function getTitle(): string|Htmlable
+    public function getTitle(): string
     {
         return __('admin/user-resource.list.title');
     }

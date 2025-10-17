@@ -36,7 +36,7 @@ it('redirects to auth panel login when request is not json', function (): void {
     // Mock the Filament auth panel and its login route
     $panel = mock(Panel::class);
     $panel->shouldReceive('route')
-        ->with('auth.login')
+        ->with(Illuminate\Auth\Events\Login::class)
         ->andReturn('/auth/login');
 
     Filament::shouldReceive('getPanel')

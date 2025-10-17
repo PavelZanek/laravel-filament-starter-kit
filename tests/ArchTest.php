@@ -28,6 +28,7 @@ arch('avoid open for extension')
         'App\Models\User',
         'App\Models\Role',
         'App\Models\Permission',
+        'App\Http\Middleware\FilamentAuthenticateRedirect',
     ]);
 
 arch('ensure no extends')
@@ -55,6 +56,7 @@ arch('avoid mutation')
         'App\Providers',
         'App\View',
         'App\Http\Responses',
+        'App\Http\Middleware',
     ]);
 
 arch('avoid inheritance')
@@ -74,6 +76,7 @@ arch('avoid inheritance')
         'App\Providers',
         'App\View',
         'App\Http\Responses',
+        'App\Http\Middleware',
     ]);
 
 // arch('annotations')

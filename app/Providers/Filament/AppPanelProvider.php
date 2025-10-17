@@ -102,7 +102,7 @@ final class AppPanelProvider extends PanelProvider
             ->renderHook(
                 // PanelsRenderHook::BODY_END,
                 PanelsRenderHook::BODY_END,
-                fn () => view('footer')
+                fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('footer')
             );
     }
 }

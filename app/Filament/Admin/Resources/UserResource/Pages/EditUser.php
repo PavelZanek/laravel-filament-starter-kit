@@ -9,7 +9,6 @@ use App\Models\Role;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Contracts\Support\Htmlable;
 use Override;
 
 final class EditUser extends EditRecord
@@ -17,13 +16,13 @@ final class EditUser extends EditRecord
     protected static string $resource = UserResource::class;
 
     #[Override] // @phpstan-ignore-line
-    public function getTitle(): string|Htmlable
+    public function getTitle(): string
     {
         return __('admin/user-resource.edit.title');
     }
 
     #[Override] // @phpstan-ignore-line
-    public function getSubheading(): string|Htmlable|null
+    public function getSubheading(): ?string
     {
         return __('admin/user-resource.edit.subheading');
     }
