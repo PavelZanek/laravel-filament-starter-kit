@@ -19,7 +19,7 @@ final class ListRoles extends ListRecords
         return __('admin/role-resource.list.title');
     }
 
-    public function setPage($page, $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
+    public function setPage(int|string $page, ?string $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
     {
         parent::setPage($page, $pageName);
 

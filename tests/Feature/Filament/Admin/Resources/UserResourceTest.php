@@ -270,7 +270,7 @@ it('supports comprehensive CRUD operations with validation and actions', functio
         ])
         ->call('create')
         ->assertHasNoErrors();
-        // ->assertRedirect(UserResource::getUrl('edit', ['record' => $newData->getRouteKey()]));
+    // ->assertRedirect(UserResource::getUrl('edit', ['record' => $newData->getRouteKey()]));
 
     $this->assertDatabaseHas(User::class, [
         'name' => $newData->name,

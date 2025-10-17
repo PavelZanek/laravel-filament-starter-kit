@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
     'shield_resource' => [
         'should_register_navigation' => true,
-        'slug' => 'shield/roles',
+        'slug' => 'roles',
         'navigation_sort' => -1,
         'navigation_badge' => true,
         'navigation_group' => true,
@@ -13,11 +13,6 @@ return [
         'show_model_path' => true,
         'is_scoped_to_tenant' => false,
         'cluster' => null,
-        'tabs' => [
-            'resources' => true,
-            'pages' => true,
-            'widgets' => true,
-        ],
     ],
 
     'tenant_model' => null,
@@ -60,7 +55,7 @@ return [
         'pages' => true,
         'widgets' => true,
         'resources' => true,
-        'custom_permissions' => false,
+        'custom_permissions' => true,
     ],
 
     'generator' => [

@@ -29,13 +29,15 @@ return static function (RectorConfig $rectorConfig): void {
         StringToClassConstantRector::class => [
             __DIR__.'/routes/web.php',
             __DIR__.'/app/Providers/AppServiceProvider.php',
+            __DIR__.'/app/Http/Middleware/FilamentAuthenticateRedirect.php',
+            __DIR__.'/tests/Feature/Http/Middleware/FilamentAuthenticateRedirectTest.php',
         ],
         PrivatizeFinalClassMethodRector::class => [
             __DIR__.'/app/Filament/Admin/Resources/RoleResource/Pages/CreateRole.php',
             __DIR__.'/app/Filament/Admin/Resources/RoleResource/Pages/EditRole.php',
         ],
         RemoveUnusedPublicMethodParameterRector::class => [
-            __DIR__.'/app/Policies/RolePolicy.php',
+            __DIR__.'/app/Policies',
         ],
     ]);
 

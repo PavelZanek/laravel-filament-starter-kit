@@ -35,19 +35,25 @@ use Spatie\Permission\Traits\HasRoles;
  * @property CarbonImmutable|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
+ * @property int|null $created_by_id
+ * @property int|null $updated_by_id
+ * @property int|null $deleted_by_id
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property CarbonImmutable|null $deleted_at
+ * @property-read User|null $createdBy
+ * @property-read User|null $deletedBy
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Permission> $permissions
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Role> $roles
  * @property-read int|null $roles_count
+ * @property-read User|null $updatedBy
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Workspace> $workspaces
  * @property-read int|null $workspaces_count
  *
- * @method static UserFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
  * @method static Builder<static>|User onlyTrashed()
@@ -55,7 +61,9 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder<static>|User query()
  * @method static Builder<static>|User role($roles, $guard = null, $without = false)
  * @method static Builder<static>|User whereCreatedAt($value)
+ * @method static Builder<static>|User whereCreatedById($value)
  * @method static Builder<static>|User whereDeletedAt($value)
+ * @method static Builder<static>|User whereDeletedById($value)
  * @method static Builder<static>|User whereEmail($value)
  * @method static Builder<static>|User whereEmailVerifiedAt($value)
  * @method static Builder<static>|User whereId($value)
@@ -63,6 +71,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder<static>|User wherePassword($value)
  * @method static Builder<static>|User whereRememberToken($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
+ * @method static Builder<static>|User whereUpdatedById($value)
  * @method static Builder<static>|User withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|User withoutPermission($permissions)
  * @method static Builder<static>|User withoutRole($roles, $guard = null)

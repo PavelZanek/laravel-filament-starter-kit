@@ -20,25 +20,39 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @property string $name
  * @property string $guard_name
  * @property bool $is_default
+ * @property int|null $created_by_id
+ * @property int|null $updated_by_id
+ * @property int|null $deleted_by_id
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
+ * @property CarbonImmutable|null $deleted_at
+ * @property-read User|null $createdBy
+ * @property-read User|null $deletedBy
  * @property-read Collection<int, Permission> $permissions
  * @property-read int|null $permissions_count
+ * @property-read User|null $updatedBy
  * @property-read Collection<int, User> $users
  * @property-read int|null $users_count
  *
- * @method static RoleFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\RoleFactory factory($count = null, $state = [])
  * @method static Builder<static>|Role newModelQuery()
  * @method static Builder<static>|Role newQuery()
- * @method static Builder<static>|Role permission($permissions, $without = false)
+ * @method static Builder<static>|Role onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role permission($permissions, $without = false)
  * @method static Builder<static>|Role query()
  * @method static Builder<static>|Role whereCreatedAt($value)
+ * @method static Builder<static>|Role whereCreatedById($value)
+ * @method static Builder<static>|Role whereDeletedAt($value)
+ * @method static Builder<static>|Role whereDeletedById($value)
  * @method static Builder<static>|Role whereGuardName($value)
  * @method static Builder<static>|Role whereId($value)
  * @method static Builder<static>|Role whereIsDefault($value)
  * @method static Builder<static>|Role whereName($value)
  * @method static Builder<static>|Role whereUpdatedAt($value)
- * @method static Builder<static>|Role withoutPermission($permissions)
+ * @method static Builder<static>|Role whereUpdatedById($value)
+ * @method static Builder<static>|Role withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role withoutPermission($permissions)
+ * @method static Builder<static>|Role withoutTrashed()
  *
  * @mixin \Eloquent
  */

@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read Collection<int, User> $users
  * @property-read int|null $users_count
  *
- * @method static WorkspaceFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\WorkspaceFactory factory($count = null, $state = [])
  * @method static Builder<static>|Workspace newModelQuery()
  * @method static Builder<static>|Workspace newQuery()
  * @method static Builder<static>|Workspace query()

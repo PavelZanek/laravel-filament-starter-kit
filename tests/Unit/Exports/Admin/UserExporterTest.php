@@ -2,29 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Filament\Exports\UserExporter;
-use Filament\Actions\Exports\Models\Export;
+use App\Filament\Exports\Admin\UserExporter;
 
-function createExportStub(int $successful, int $failed): Export
-{
-    return new class($successful, $failed) extends Export
-    {
-        public int $successful_rows;
-
-        protected int $failed;
-
-        public function __construct(int $successful, int $failed)
-        {
-            $this->successful_rows = $successful;
-            $this->failed = $failed;
-        }
-
-        public function getFailedRowsCount(): int
-        {
-            return $this->failed;
-        }
-    };
-}
+require_once __DIR__.'/../Helpers/ExportTestHelpers.php';
 
 it('returns proper columns', function (): void {
     $columns = UserExporter::getColumns();
@@ -33,14 +13,14 @@ it('returns proper columns', function (): void {
         ->and(count($columns))->toBe(8);
 
     $expectedNames = [
-        'id',
-        'name',
-        'email',
-        'email_verified_at',
-        'roles.name',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        'id',                   // Base column (first)
+        'name',                 // Resource column
+        'email',                // Resource column
+        'email_verified_at',    // Resource column
+        'roles.name',           // Resource column
+        'created_at',           // Base column (end)
+        'updated_at',           // Base column (end)
+        'deleted_at',           // Base column (end)
     ];
 
     foreach ($columns as $index => $column) {

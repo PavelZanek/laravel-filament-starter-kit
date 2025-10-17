@@ -52,9 +52,9 @@ final class RoleResource extends Resource implements HasShieldPermissions
                         ->description(fn (): HtmlString => new HtmlString('<span style="word-break: break-word;">'.Utils::showModelPath($entity['fqcn']).'</span>'))
                         ->compact()
                         ->schema([
-                            static::getCheckBoxListComponentForResource($entity),
+                            self::getCheckBoxListComponentForResource($entity),
                         ])
-                        ->columnSpan(fn (): int => (int) static::shield()->getSectionColumnSpan())
+                        ->columnSpan(fn (): int => (int) self::shield()->getSectionColumnSpan())
                         ->collapsible();
                 });
 
@@ -137,19 +137,11 @@ final class RoleResource extends Resource implements HasShieldPermissions
         return __('filament-shield::filament-shield.resource.label.roles');
     }
 
-//    #[Override]
-//    public static function shouldRegisterNavigation(): bool
-//    {
-//        return Utils::isResourceNavigationRegistered();
-//    }
-
-//    #[Override]
-//    public static function getNavigationGroup(): string
-//    {
-//        return Utils::isResourceNavigationGroupEnabled()
-//            ? __('filament-shield::filament-shield.nav.group')
-//            : '';
-//    }
+    #[Override]
+    public static function getNavigationGroup(): string
+    {
+        return __('admin/user-resource.navigation_group');
+    }
 
     #[Override]
     public static function getNavigationLabel(): string
@@ -163,36 +155,11 @@ final class RoleResource extends Resource implements HasShieldPermissions
         return __('filament-shield::filament-shield.nav.role.icon');
     }
 
-//    #[Override]
-//    public static function getNavigationSort(): ?int
-//    {
-//        return Utils::getResourceNavigationSort();
-//    }
-
     #[Override]
     public static function getSlug(?Panel $panel = null): string
     {
         return Utils::getResourceSlug();
     }
-
-    //    public static function getNavigationBadge(): ?string
-    //    {
-    //        return Utils::isResourceNavigationBadgeEnabled()
-    //            ? strval(self::getEloquentQuery()->count())
-    //            : null;
-    //    }
-
-//    #[Override]
-//    public static function isScopedToTenant(): bool
-//    {
-//        return Utils::isScopedToTenant();
-//    }
-
-//    #[Override]
-//    public static function canGloballySearch(): bool
-//    {
-//        return Utils::isResourceGloballySearchable() && count(self::getGloballySearchableAttributes()) && self::canViewAny();
-//    }
 
     /**
      * @return Builder<Role>
