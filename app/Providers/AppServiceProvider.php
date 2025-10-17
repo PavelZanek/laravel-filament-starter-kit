@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Http\Middleware\FilamentAuthenticateRedirect;
 use App\Models\Role;
 use App\Models\User;
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
@@ -54,6 +55,11 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->app->bind(
+            Authenticate::class,
+            FilamentAuthenticateRedirect::class,
+        );
+
         Gate::before(function (User $user): ?bool {
             return $user->hasRole(Role::SUPER_ADMIN) ? true : null;
         });
