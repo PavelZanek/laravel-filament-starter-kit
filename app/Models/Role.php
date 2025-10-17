@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Traits\Blameable;
 use Carbon\CarbonImmutable;
 use Database\Factories\RoleFactory;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 use Spatie\Permission\Models\Role as SpatieRole;
 
@@ -43,7 +45,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
 class Role extends SpatieRole
 {
     /** @use HasFactory<RoleFactory> */
-    use HasFactory;
+    use Blameable, HasFactory, SoftDeletes;
 
     /**
      * Default user roles
@@ -76,9 +78,9 @@ class Role extends SpatieRole
     protected static function booted(): void
     {
         self::deleting(function (Role $role): void {
-            // @codeCoverageIgnoreStart
-            throw new Exception('Default roles cannot be deleted', 403);
-            // @codeCoverageIgnoreEnd
+            if ($role->is_default) {
+                throw new Exception('Default roles cannot be deleted', 403);
+            }
         });
     }
 
@@ -91,6 +93,9 @@ class Role extends SpatieRole
     {
         return [
             'is_default' => 'boolean',
+            'deleted_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 }

@@ -17,13 +17,13 @@ final class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
 
-    #[Override] // @phpstan-ignore-line
+    #[Override]
     public function getTitle(): string
     {
         return __('admin/user-resource.list.title');
     }
 
-    public function setPage(int|string $page, ?string $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
+    public function setPage($page, $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
     {
         parent::setPage($page, $pageName);
 

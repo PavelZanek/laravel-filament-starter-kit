@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Traits\Blameable;
 use Carbon\CarbonImmutable;
 use Database\Factories\PermissionFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 
 /**
@@ -43,7 +45,7 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 final class Permission extends SpatiePermission
 {
     /** @use HasFactory<PermissionFactory> */
-    use HasFactory;
+    use Blameable, HasFactory, SoftDeletes;
 
     /**
      * Guard names
@@ -56,4 +58,16 @@ final class Permission extends SpatiePermission
         self::GUARD_NAME_WEB => 'Web',
         self::GUARD_NAME_API => 'API',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
+    }
 }

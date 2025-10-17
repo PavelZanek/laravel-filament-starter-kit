@@ -8,34 +8,60 @@ use App\Filament\Admin\Resources\Roles\Pages\CreateRole;
 use App\Filament\Admin\Resources\Roles\Pages\EditRole;
 use App\Filament\Admin\Resources\Roles\Pages\ListRoles;
 use App\Filament\Admin\Resources\Roles\Pages\ViewRole;
-use App\Helpers\ProjectHelper;
+use App\Filament\Admin\Resources\Roles\Schemas\RoleForm;
+use App\Filament\Admin\Resources\Roles\Tables\RoleTable;
+use App\Filament\Traits\CommonTableColumns;
+use App\Filament\Traits\CommonTableFilters;
 use App\Models\Role;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use BezhanSalleh\FilamentShield\Traits\HasShieldFormComponents;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ViewAction;
-use Filament\Facades\Filament;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Exception;
 use Filament\Panel;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 use Override;
 
 final class RoleResource extends Resource implements HasShieldPermissions
 {
+    use CommonTableColumns;
+    use CommonTableFilters;
     use HasShieldFormComponents;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    /**
+     * @return array<Section>
+     */
+    public static function getResourceEntitiesSchema(): array
+    {
+        // Get all resources from all panels and map them to correct permission names
+        $resourceEntities = self::getAllResourcesFromAllPanels()
+            ->sortKeys()
+            ->map(
+                function (array $entity): Section { // @phpstan-ignore argument.type
+                    /** @var array{resource:string,model:string,fqcn:string} $entity */
+                    $sectionLabel = $entity['model'];
+
+                    return Section::make($sectionLabel)
+                        ->description(fn (): HtmlString => new HtmlString('<span style="word-break: break-word;">'.Utils::showModelPath($entity['fqcn']).'</span>'))
+                        ->compact()
+                        ->schema([
+                            static::getCheckBoxListComponentForResource($entity),
+                        ])
+                        ->columnSpan(fn (): int => (int) static::shield()->getSectionColumnSpan())
+                        ->collapsible();
+                });
+
+        // Return all resource entities (custom entities are now included in getAllResourcesFromAllPanels)
+        /** @var array<Section> */
+        return $resourceEntities->toArray();
+    }
 
     /**
      * @return string[]
@@ -55,107 +81,16 @@ final class RoleResource extends Resource implements HasShieldPermissions
     #[Override]
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Grid::make()
-                    ->schema([
-                        Section::make()
-                            ->schema([
-                                TextInput::make('name')
-                                    ->label(__('filament-shield::filament-shield.field.name'))
-                                    ->unique(ignoreRecord: true)
-                                    ->required()
-                                    ->maxLength(255),
-
-                                TextInput::make('guard_name')
-                                    ->label(__('filament-shield::filament-shield.field.guard_name'))
-                                    ->default(Utils::getFilamentAuthGuard())
-                                    ->nullable()
-                                    ->maxLength(255),
-
-                                Select::make(config('permission.column_names.team_foreign_key')) // @phpstan-ignore-line
-                                    ->label(__('filament-shield::filament-shield.field.team'))
-                                    ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
-                                    /** @phpstan-ignore-next-line */
-                                    ->default(Filament::getTenant()?->id)
-                                    // ->options(fn (): Arrayable => Utils::getTenantModel() ? Utils::getTenantModel()::pluck('name', 'id') : collect())
-                                    ->options(fn (): Arrayable => in_array(Utils::getTenantModel(), [null, '', '0'], true) ? collect() : Utils::getTenantModel()::pluck('name', 'id')) // @phpstan-ignore-line
-                                    ->hidden(fn (): bool => ! (self::shield()->isCentralApp() && Utils::isTenancyEnabled()))
-                                    ->dehydrated(fn (): bool => ! (self::shield()->isCentralApp() && Utils::isTenancyEnabled())),
-                                self::getSelectAllFormComponent(),
-
-                            ])
-                            ->columns([
-                                'sm' => 2,
-                                'lg' => 3,
-                            ]),
-                    ]),
-                self::getShieldFormComponents(),
-            ]);
+        return RoleForm::configure($schema);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('name')
-                    ->weight('font-medium')
-                    ->label(__('filament-shield::filament-shield.column.name'))
-                    ->formatStateUsing(fn (mixed $state): string => Str::headline($state)) // @phpstan-ignore-line
-                    ->searchable(),
-                TextColumn::make('guard_name')
-                    ->badge()
-                    ->color('warning')
-                    ->label(__('filament-shield::filament-shield.column.guard_name')),
-                TextColumn::make('team.name')
-                    ->default('Global')
-                    ->badge()
-                    ->color(fn (mixed $state): string => str($state)->contains('Global') ? 'gray' : 'primary') // @phpstan-ignore-line
-                    ->label(__('filament-shield::filament-shield.column.team'))
-                    ->searchable()
-                    ->visible(fn (): bool => self::shield()->isCentralApp() && Utils::isTenancyEnabled()),
-                TextColumn::make('permissions_count')
-                    ->badge()
-                    ->label(__('filament-shield::filament-shield.column.permissions'))
-                    ->counts('permissions')
-                    ->color(fn (string $state): string => match ($state) {
-                        '0' => 'gray',
-                        default => 'success',
-                    }),
-                TextColumn::make('users_count')
-                    ->badge()
-                    ->label(__('admin/role-resource.custom_attributes.users_count'))
-                    ->counts('users')
-                    ->color(fn (string $state): string => match ($state) {
-                        '0' => 'gray',
-                        default => 'success',
-                    }),
-                IconColumn::make('is_default')
-                    ->label(__('common.is_default'))
-                    ->icon(fn (bool $state): string => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
-                    ->color(fn (bool $state): string => $state ? 'success' : 'danger'),
-                TextColumn::make('updated_at')
-                    ->label(__('filament-shield::filament-shield.column.updated_at'))
-                    ->dateTime(),
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                ViewAction::make()
-                    ->button(),
-                DeleteAction::make()
-                    ->button()
-                    ->visible(fn (Role $record): bool => auth()->user()?->can('delete', $record)
-                        && ! $record->is_default
-                    ),
-            ])
-            ->toolbarActions([
-                // Tables\Actions\DeleteBulkAction::make(),
-            ])
-            ->paginated(ProjectHelper::getRecordsPerPageOptions())
-            ->defaultPaginationPageOption(ProjectHelper::getRecordsPerPageDefaultOption());
+        return RoleTable::configure($table);
     }
 
     #[Override]
@@ -180,16 +115,14 @@ final class RoleResource extends Resource implements HasShieldPermissions
     #[Override]
     public static function getCluster(): ?string
     {
-        return Utils::getResourceCluster() ?? self::$cluster; // @phpstan-ignore-line
+        return null; // Explicitly return null as we don't use clusters
     }
 
-    /**
-     * @return class-string<\Illuminate\Database\Eloquent\Model>
-     */
     #[Override]
     public static function getModel(): string
     {
-        return Utils::getRoleModel(); // @phpstan-ignore-line
+        /** @var class-string<\Illuminate\Database\Eloquent\Model> */
+        return Utils::getRoleModel();
     }
 
     #[Override]
@@ -204,19 +137,19 @@ final class RoleResource extends Resource implements HasShieldPermissions
         return __('filament-shield::filament-shield.resource.label.roles');
     }
 
-    #[Override]
-    public static function shouldRegisterNavigation(): bool
-    {
-        return (bool) config('filament-shield.shield_resource.should_register_navigation', true);
-    }
+//    #[Override]
+//    public static function shouldRegisterNavigation(): bool
+//    {
+//        return Utils::isResourceNavigationRegistered();
+//    }
 
-    #[Override]
-    public static function getNavigationGroup(): string
-    {
-        return config('filament-shield.shield_resource.navigation_group', true)
-            ? __('filament-shield::filament-shield.nav.group')
-            : '';
-    }
+//    #[Override]
+//    public static function getNavigationGroup(): string
+//    {
+//        return Utils::isResourceNavigationGroupEnabled()
+//            ? __('filament-shield::filament-shield.nav.group')
+//            : '';
+//    }
 
     #[Override]
     public static function getNavigationLabel(): string
@@ -230,14 +163,11 @@ final class RoleResource extends Resource implements HasShieldPermissions
         return __('filament-shield::filament-shield.nav.role.icon');
     }
 
-    #[Override]
-    public static function getNavigationSort(): ?int
-    {
-        /** @var int|null $sort */
-        $sort = config('filament-shield.shield_resource.navigation_sort', -1);
-
-        return $sort;
-    }
+//    #[Override]
+//    public static function getNavigationSort(): ?int
+//    {
+//        return Utils::getResourceNavigationSort();
+//    }
 
     #[Override]
     public static function getSlug(?Panel $panel = null): string
@@ -252,15 +182,130 @@ final class RoleResource extends Resource implements HasShieldPermissions
     //            : null;
     //    }
 
+//    #[Override]
+//    public static function isScopedToTenant(): bool
+//    {
+//        return Utils::isScopedToTenant();
+//    }
+
+//    #[Override]
+//    public static function canGloballySearch(): bool
+//    {
+//        return Utils::isResourceGloballySearchable() && count(self::getGloballySearchableAttributes()) && self::canViewAny();
+//    }
+
+    /**
+     * @return Builder<Role>
+     */
     #[Override]
-    public static function isScopedToTenant(): bool
+    public static function getEloquentQuery(): Builder
     {
-        return (bool) config('filament-shield.shield_resource.is_scoped_to_tenant', true);
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
-    #[Override]
-    public static function canGloballySearch(): bool
+    /**
+     * Override to provide only admin panel widget permissions
+     *
+     * @return array<string, string>
+     */
+    public static function getWidgetOptions(): array
     {
-        return (bool) config('filament-shield.shield_resource.is_globally_searchable', false) && count(self::getGloballySearchableAttributes()) && self::canViewAny();
+        // Return only widgets that are actually used in admin panel
+        return [
+            'widget_UserStatsOverview' => 'User Stats Overview',
+        ];
+    }
+
+    /**
+     * Override to provide custom permissions (filament-panel.* permissions)
+     *
+     * @return array<string, string>
+     */
+    public static function getCustomPermissionOptions(): array
+    {
+        /** @var array<string, string> */
+        return \Spatie\Permission\Models\Permission::where('name', 'like', 'filament-panel.%')
+            ->pluck('name')
+            ->mapWithKeys(function (mixed $permission): array {
+                /** @var string $permission */
+                $label = match ($permission) {
+                    'filament-panel.admin' => 'Admin Panel Access',
+                    'filament-panel.app' => 'App Panel Access',
+                    'filament-panel.cms' => 'CMS Panel Access',
+                    default => str($permission)->after('filament-panel.')->title()->toString().' Panel Access'
+                };
+
+                return [$permission => $label];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Get all resources from all Filament panels and map them to correct permission names
+     *
+     * @return \Illuminate\Support\Collection<string, array{resource:string,model:string,fqcn:string}>
+     */
+    private static function getAllResourcesFromAllPanels(): \Illuminate\Support\Collection
+    {
+        /** @var \Illuminate\Support\Collection<string, array{resource:string,model:string,fqcn:string}> $allResources */
+        $allResources = collect();
+
+        // Map of actual permission prefixes to model names based on existing permissions in database
+        $permissionToModelMap = self::buildPermissionToModelMap();
+
+        foreach ($permissionToModelMap as $permissionPrefix => $modelName) {
+            $allResources->put($permissionPrefix, [
+                'resource' => $permissionPrefix,
+                'model' => $modelName,
+                'fqcn' => "App\\Models\\{$modelName}",
+            ]);
+        }
+
+        return $allResources;
+    }
+
+    /**
+     * Build a map of permission prefixes to model names based on existing permissions
+     *
+     * @return array<string, string>
+     */
+    private static function buildPermissionToModelMap(): array
+    {
+        // Get all unique permission suffixes from database (excluding filament-panel and widget permissions)
+        $permissions = \Spatie\Permission\Models\Permission::where('name', 'not like', 'filament-panel.%')
+            ->where('name', 'not like', 'widget_%')
+            ->get(['name'])
+            ->pluck('name')
+            ->map(function (mixed $permission): ?string {
+                /** @var string $permission */
+                // Extract the resource name from permission (e.g., 'view_any_currency' -> 'currency')
+                if (preg_match('/^[a-z_]+_([a-z_]+)$/', $permission, $matches)) {
+                    return $matches[1];
+                }
+
+                return null;
+            })
+            ->filter()
+            ->unique()
+            ->values();
+
+        // Map resource names to proper model names
+        $modelMap = [
+            'currency' => 'Currency',
+            'role' => 'Role',
+            'user' => 'User',
+            'workspace' => 'Workspace',
+        ];
+
+        /** @var array<string, string> */
+        return $permissions->mapWithKeys(function (mixed $resource) use ($modelMap): array {
+            /** @var non-falsy-string $resource */
+            $modelName = $modelMap[$resource] ?? str($resource)->studly()->toString();
+
+            return [$resource => $modelName];
+        })->toArray();
     }
 }

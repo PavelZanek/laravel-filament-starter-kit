@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
-use App\Models\Role;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Arr;
@@ -45,24 +44,5 @@ final class CreateRole extends CreateRecord
         $result = Arr::only($data, ['name', 'guard_name']);
 
         return $result;
-    }
-
-    protected function afterCreate(): void
-    {
-        $permissionModels = collect();
-        $this->permissions->each(function (mixed $permission) use ($permissionModels): void {
-            // @codeCoverageIgnoreStart
-            /** @var ?string $guardName */
-            $guardName = $this->data['guard_name'] ?? null;
-            $permissionModels->push(Utils::getPermissionModel()::firstOrCreate([
-                'name' => $permission,
-                'guard_name' => $guardName,
-            ]));
-            // @codeCoverageIgnoreEnd
-        });
-
-        /** @var Role $record */
-        $record = $this->record;
-        $record->syncPermissions($permissionModels);
     }
 }

@@ -69,23 +69,4 @@ final class EditRole extends EditRecord
 
         return $result;
     }
-
-    protected function afterSave(): void
-    {
-        $permissionModels = collect();
-        $this->permissions->each(function (mixed $permission) use ($permissionModels): void {
-            // @codeCoverageIgnoreStart
-            /** @var ?string $guardName */
-            $guardName = $this->data['guard_name'] ?? null;
-            $permissionModels->push(Utils::getPermissionModel()::firstOrCreate([
-                'name' => $permission,
-                'guard_name' => $guardName,
-            ]));
-            // @codeCoverageIgnoreEnd
-        });
-
-        /** @var Role $record */
-        $record = $this->record;
-        $record->syncPermissions($permissionModels);
-    }
 }

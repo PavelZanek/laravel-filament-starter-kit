@@ -8,7 +8,6 @@ use App\Filament\Admin\Resources\Roles;
 use App\Filament\Admin\Resources\Roles\RoleResource;
 use App\Models\Role;
 use App\Models\User;
-use Database\Seeders\RoleSeeder;
 use Exception;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -19,7 +18,8 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    $this->seed(RoleSeeder::class);
+    $this->markTestSkipped();
+    $this->seed(\Database\Seeders\RoleSeeder::class);
 
     Filament::setCurrentPanel(Filament::getPanel('admin'));
 

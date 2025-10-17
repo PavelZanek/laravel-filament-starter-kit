@@ -13,14 +13,14 @@ final class CreateUser extends CreateRecord
 {
     protected static string $resource = UserResource::class;
 
-    #[Override] // @phpstan-ignore-line
+    #[Override]
     public function getTitle(): string
     {
         return __('admin/user-resource.create.title');
     }
 
-    #[Override] // @phpstan-ignore-line
-    public function getSubheading(): ?string
+    #[Override]
+    public function getSubheading(): string
     {
         return __('admin/user-resource.create.subheading');
     }
@@ -37,14 +37,5 @@ final class CreateUser extends CreateRecord
         $data['password'] = Hash::make($psw);
 
         return $data;
-    }
-
-    #[Override]
-    protected function getRedirectUrl(): string
-    {
-        /** @var string $url */
-        $url = $this->getResource()::getUrl('index');
-
-        return $url;
     }
 }

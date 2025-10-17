@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL', 'superadmin@test.com'),
     'records_per_page' => [
         'default' => 10,
         'options' => [10, 25, 50, 100],
