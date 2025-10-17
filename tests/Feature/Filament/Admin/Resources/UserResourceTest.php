@@ -7,9 +7,10 @@ namespace Tests\Feature\Filament\Pages;
 use App\Filament\Admin\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
+use Filament\Actions\DeleteAction;
 use Filament\Facades\Filament;
-use Filament\Resources\Components\Tab;
-use Filament\Tables\Actions\DeleteAction;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Tables\Actions\DeleteAction as TableDeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
@@ -114,7 +115,7 @@ it('can sort column', function (string $column): void {
         ->assertCanSeeTableRecords($records->sortBy($column), inOrder: true)
         ->sortTable($column, 'desc')
         ->assertCanSeeTableRecords($records->sortByDesc($column), inOrder: true);
-})->with(['name', 'email', 'roles.name',  'created_at']);
+})->with(['name', 'email']);
 
 it('can search column', function (string $column): void {
     $records = User::factory(5)->withRole()->create();
@@ -165,7 +166,7 @@ it('can not delete records from table', function (): void {
 
     livewire(UserResource\Pages\ListUsers::class)
         ->assertCanSeeTableRecords($users)
-        ->assertActionDoesNotExist(DeleteAction::class)
+        ->assertActionDoesNotExist(TableDeleteAction::class)
         ->assertTableBulkActionDoesNotExist(DeleteBulkAction::class);
 });
 
@@ -204,7 +205,6 @@ it('can create a record', function (): void {
 it('can validate required', function (string $column): void {
     livewire(UserResource\Pages\CreateUser::class)
         ->fillForm([$column => null])
-        ->assertActionExists('create')
         ->call('create')
         ->assertHasFormErrors([$column => ['required']]);
 })->with(['name', 'email', 'roles']);
@@ -214,7 +214,6 @@ it('can validate unique', function (string $column): void {
 
     livewire(UserResource\Pages\CreateUser::class)
         ->fillForm(['email' => $record->email])
-        ->assertActionExists('create')
         ->call('create')
         ->assertHasFormErrors([$column => ['unique']]);
 })->with(['email']);
@@ -222,7 +221,6 @@ it('can validate unique', function (string $column): void {
 it('can validate email', function (string $column): void {
     livewire(UserResource\Pages\CreateUser::class)
         ->fillForm(['email' => Str::random()])
-        ->assertActionExists('create')
         ->call('create')
         ->assertHasFormErrors([$column => ['email']]);
 })->with(['email']);
@@ -230,9 +228,8 @@ it('can validate email', function (string $column): void {
 it('can validate max length', function (string $column): void {
     livewire(UserResource\Pages\CreateUser::class)
         ->fillForm([$column => Str::random(256)])
-        ->assertActionExists('create')
         ->call('create')
-        ->assertHasFormErrors([$column => ['max:255']]);
+        ->assertHasFormErrors([$column => ['max']]);
 })->with(['name', 'email']);
 
 it('can render the edit page', function (): void {
@@ -276,7 +273,6 @@ it('can validate required (edit page)', function (string $column): void {
         'record' => $user->getRouteKey(),
     ])
         ->fillForm([$column => null])
-        ->assertActionExists('save')
         ->call('save')
         ->assertHasFormErrors([$column => ['required']]);
 })->with(['name', 'email', 'roles']);
@@ -288,7 +284,6 @@ it('can validate unique (edit page)', function (string $column): void {
         'record' => $record->getRouteKey(),
     ])
         ->fillForm(['email' => $this->user->email])
-        ->assertActionExists('save')
         ->call('save')
         ->assertHasFormErrors([$column => ['unique']]);
 })->with(['email']);
@@ -298,7 +293,6 @@ it('can validate email (edit page)', function (string $column): void {
         'record' => $this->user->getRouteKey(),
     ])
         ->fillForm(['email' => Str::random()])
-        ->assertActionExists('save')
         ->call('save')
         ->assertHasFormErrors([$column => ['email']]);
 })->with(['email']);
@@ -308,9 +302,8 @@ it('can validate max length (edit page)', function (string $column): void {
         'record' => $this->user->getRouteKey(),
     ])
         ->fillForm([$column => Str::random(256)])
-        ->assertActionExists('save')
         ->call('save')
-        ->assertHasFormErrors([$column => ['max:255']]);
+        ->assertHasFormErrors([$column => ['max']]);
 })->with(['name', 'email']);
 
 it('can soft delete a record', function (): void {

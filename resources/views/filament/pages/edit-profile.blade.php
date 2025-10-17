@@ -1,17 +1,21 @@
-@php
-    use Filament\Support\Enums\Alignment;
-@endphp
-
-<x-filament-panels::page>
-    <x-filament-panels::form wire:submit="updateProfile">
+<x-filament::page>
+    <form wire:submit="updateProfile">
         {{ $this->editProfileForm }}
 
-        <x-filament-panels::form.actions :actions="$this->getUpdateProfileFormActions()" :alignment="Alignment::End" />
-    </x-filament-panels::form>
+        <div class="fi-form-actions">
+            @foreach ($this->getUpdateProfileFormActions() as $action)
+                {{ $action }}
+            @endforeach
+        </div>
+    </form>
 
-    <x-filament-panels::form wire:submit="updatePassword">
+    <form wire:submit="updatePassword">
         {{ $this->editPasswordForm }}
 
-        <x-filament-panels::form.actions :actions="$this->getUpdatePasswordFormActions()" :alignment="Alignment::End" />
-    </x-filament-panels::form>
-</x-filament-panels::page>
+        <div class="fi-form-actions">
+            @foreach ($this->getUpdatePasswordFormActions() as $action)
+                {{ $action }}
+            @endforeach
+        </div>
+    </form>
+</x-filament::page>

@@ -7,8 +7,9 @@ namespace App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource;
 use App\Models\Role;
 use Filament\Actions;
-use Filament\Resources\Components\Tab;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
 
@@ -22,7 +23,7 @@ final class ListUsers extends ListRecords
         return __('admin/user-resource.list.title');
     }
 
-    public function setPage($page, $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
+    public function setPage(int|string $page, ?string $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
     {
         parent::setPage($page, $pageName);
 
@@ -65,7 +66,7 @@ final class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

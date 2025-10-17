@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Pages\Tenancy;
 
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
+use Filament\Schemas\Schema;
 use Override;
 
 final class EditWorkspace extends EditTenantProfile
@@ -17,9 +17,9 @@ final class EditWorkspace extends EditTenantProfile
     }
 
     #[Override]
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             TextInput::make('name')
                 ->label(__('common.workspaces.fields.name'))
                 ->required(),

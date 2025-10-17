@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Responses;
 
+use Filament\Auth\Http\Responses\RegistrationResponse;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\RegistrationResponse;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Features\SupportRedirects\Redirector;
 use Override;

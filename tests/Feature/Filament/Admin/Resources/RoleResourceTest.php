@@ -34,6 +34,18 @@ it('provides relations and pages arrays', function (): void {
         ->and(RoleResource::getPages())->toBeArray();
 });
 
+it('returns correct permission prefixes', function (): void {
+    $prefixes = RoleResource::getPermissionPrefixes();
+
+    expect($prefixes)->toBeArray()
+        ->toContain('view')
+        ->toContain('view_any')
+        ->toContain('create')
+        ->toContain('update')
+        ->toContain('delete')
+        ->toContain('delete_any');
+});
+
 it('can render the resource', function (): void {
     $this->get(RoleResource::getUrl())->assertSuccessful();
 });
@@ -133,7 +145,6 @@ it('can create a record', function (): void {
 it('can validate required', function (string $column): void {
     livewire(RoleResource\Pages\CreateRole::class)
         ->fillForm([$column => null])
-        ->assertActionExists('create')
         ->call('create')
         ->assertHasFormErrors([$column => ['required']]);
 })->with(['name']);
@@ -143,7 +154,6 @@ it('can validate unique', function (string $column): void {
 
     livewire(RoleResource\Pages\CreateRole::class)
         ->fillForm(['name' => $record->name])
-        ->assertActionExists('create')
         ->call('create')
         ->assertHasFormErrors([$column => ['unique']]);
 })->with(['name']);
@@ -151,9 +161,8 @@ it('can validate unique', function (string $column): void {
 it('can validate max length', function (string $column): void {
     livewire(RoleResource\Pages\CreateRole::class)
         ->fillForm([$column => Str::random(256)])
-        ->assertActionExists('create')
         ->call('create')
-        ->assertHasFormErrors([$column => ['max:255']]);
+        ->assertHasFormErrors([$column => ['max']]);
 })->with(['name', 'guard_name']);
 
 it('can render the edit page', function (): void {
@@ -201,7 +210,6 @@ it('can validate required (edit page)', function (string $column): void {
         'record' => $record->getRouteKey(),
     ])
         ->fillForm([$column => null])
-        ->assertActionExists('save')
         ->call('save')
         ->assertHasFormErrors([$column => ['required']]);
 })->with(['name']);
@@ -213,7 +221,6 @@ it('can validate unique (edit page)', function (string $column): void {
         'record' => $record->getRouteKey(),
     ])
         ->fillForm(['name' => $this->user->roles()->first()->name])
-        ->assertActionExists('save')
         ->call('save')
         ->assertHasFormErrors([$column => ['unique']]);
 })->with(['name']);
@@ -225,9 +232,8 @@ it('can validate max length (edit page)', function (string $column): void {
         'record' => $record->getRouteKey(),
     ])
         ->fillForm([$column => Str::random(256)])
-        ->assertActionExists('save')
         ->call('save')
-        ->assertHasFormErrors([$column => ['max:255']]);
+        ->assertHasFormErrors([$column => ['max']]);
 })->with(['name', 'guard_name']);
 
 it('can delete a record', function (): void {

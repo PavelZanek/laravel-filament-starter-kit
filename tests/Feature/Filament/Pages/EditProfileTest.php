@@ -27,7 +27,7 @@ it('can update profile information', function (): void {
             'email' => $newData->email,
         ], 'editProfileForm')
         ->call('updateProfile')
-        ->assertHasNoFormErrors(formName: 'editProfileForm');
+        ->assertHasNoFormErrors([], 'editProfileForm');
 
     expect($user->fresh())
         ->name->toBe($newData->name)
@@ -64,7 +64,7 @@ it('can update password', function (): void {
             'passwordConfirmation' => $newPassword,
         ], 'editPasswordForm')
         ->call('updatePassword')
-        ->assertHasNoFormErrors(formName: 'editPasswordForm');
+        ->assertHasNoFormErrors([], 'editPasswordForm');
 
     expect(Hash::check($newPassword, $user->fresh()->password))->toBeTrue();
 });

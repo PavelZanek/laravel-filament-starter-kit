@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
+use BackedEnum;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -34,9 +36,9 @@ final class EditProfile extends Page implements HasForms
      */
     public ?array $passwordData = [];
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static string $view = 'filament.pages.edit-profile';
+    protected string $view = 'filament.pages.edit-profile';
 
     protected static bool $shouldRegisterNavigation = false;
 
@@ -51,17 +53,17 @@ final class EditProfile extends Page implements HasForms
         return __('common.edit_profile.heading');
     }
 
-    public function editProfileForm(Form $form): Form
+    public function editProfileForm(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\Section::make(__('common.edit_profile.profile.subheading'))
+        return $schema->components([
+            Section::make(__('common.edit_profile.profile.subheading'))
                 ->aside()
                 ->description(__('common.edit_profile.profile.description'))
                 ->schema([
-                    Forms\Components\TextInput::make('name')
+                    TextInput::make('name')
                         ->label(__('common.edit_profile.profile.fields.name'))
                         ->required(),
-                    Forms\Components\TextInput::make('email')
+                    TextInput::make('email')
                         ->label(__('common.edit_profile.profile.fields.email'))
                         ->email()
                         ->required()
@@ -88,19 +90,19 @@ final class EditProfile extends Page implements HasForms
         $this->sendSuccessNotification();
     }
 
-    public function editPasswordForm(Form $form): Form
+    public function editPasswordForm(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\Section::make(__('common.edit_profile.password.subheading'))
+        return $schema->components([
+            Section::make(__('common.edit_profile.password.subheading'))
                 ->aside()
                 ->description(__('common.edit_profile.password.description'))
                 ->schema([
-                    Forms\Components\TextInput::make('currentPassword')
+                    TextInput::make('currentPassword')
                         ->label(__('common.edit_profile.password.fields.current_password'))
                         ->password()
                         ->required()
                         ->currentPassword(),
-                    Forms\Components\TextInput::make('password')
+                    TextInput::make('password')
                         ->label(__('common.edit_profile.password.fields.new_password'))
                         ->password()
                         ->required()
@@ -109,7 +111,7 @@ final class EditProfile extends Page implements HasForms
                         ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                         ->live(debounce: 500)
                         ->same('passwordConfirmation'),
-                    Forms\Components\TextInput::make('passwordConfirmation')
+                    TextInput::make('passwordConfirmation')
                         ->label(__('common.edit_profile.password.fields.confirm_password'))
                         ->password()
                         ->required()
@@ -148,6 +150,9 @@ final class EditProfile extends Page implements HasForms
         $this->sendSuccessNotification();
     }
 
+    /**
+     * @return array<string>
+     */
     protected function getForms(): array
     {
         return [

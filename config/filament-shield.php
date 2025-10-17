@@ -13,13 +13,16 @@ return [
         'show_model_path' => true,
         'is_scoped_to_tenant' => true,
         'cluster' => null,
+        'tabs' => [
+            'resources' => true,
+            'pages' => true,
+            'widgets' => true,
+        ],
     ],
 
     'tenant_model' => null,
 
-    'auth_provider_model' => [
-        'fqcn' => 'App\\Models\\User',
-    ],
+    'auth_provider_model' => 'App\\Models\\User',
 
     'super_admin' => [
         'enabled' => true,

@@ -7,7 +7,9 @@ namespace App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 use Override;
 
@@ -30,15 +32,16 @@ final class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->hidden(fn (User $record): bool => $record->hasRole(Role::SUPER_ADMIN) || $record->deleted_at),
-            Actions\ForceDeleteAction::make()
+            ForceDeleteAction::make()
                 ->hidden(fn (User $record): bool => $record->hasRole(Role::SUPER_ADMIN)),
-            Actions\RestoreAction::make()
+            RestoreAction::make()
                 ->hidden(fn (User $record): bool => $record->hasRole(Role::SUPER_ADMIN)),
         ];
     }
 
+    #[Override]
     protected function getRedirectUrl(): string
     {
         /** @var string $url */

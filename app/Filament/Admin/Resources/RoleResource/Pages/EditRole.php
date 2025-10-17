@@ -7,7 +7,7 @@ namespace App\Filament\Admin\Resources\RoleResource\Pages;
 use App\Filament\Admin\Resources\RoleResource;
 use App\Models\Role;
 use BezhanSalleh\FilamentShield\Support\Utils;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -35,7 +35,7 @@ final class EditRole extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->visible(fn (): bool => auth()->user()?->can('delete', $this->record)
                     && $this->record
                     && $this->record instanceof Role

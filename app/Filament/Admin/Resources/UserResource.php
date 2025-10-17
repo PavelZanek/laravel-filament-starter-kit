@@ -4,20 +4,36 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\UserResource\Pages;
+use App\Filament\Admin\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
+use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
 use App\Filament\Exports\UserExporter;
 use App\Helpers\ProjectHelper;
 use App\Models\Role;
 use App\Models\User;
+use BackedEnum;
 use Carbon\Carbon;
 use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
-use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\Indicator;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -29,7 +45,7 @@ final class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
     protected static ?int $navigationSort = -2;
 
@@ -57,28 +73,28 @@ final class UserResource extends Resource
     }
 
     #[Override]
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label(__('admin/user-resource.attributes.name'))
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->label(__('admin/user-resource.attributes.email'))
                     ->email()
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->label(__('admin/user-resource.attributes.password'))
                     ->required()
                     ->password()
                     ->maxLength(255)
                     ->rule(Password::default())
                     ->visibleOn('create'),
-                Forms\Components\Select::make('roles')
+                Select::make('roles')
                     ->label(__('admin/user-resource.custom_attributes.role'))
                     ->relationship(
                         name: 'roles',
@@ -114,22 +130,22 @@ final class UserResource extends Resource
                 $query->with('roles');
             })
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__('admin/user-resource.attributes.name'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label(__('admin/user-resource.attributes.email'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('roles.name')
+                TextColumn::make('roles.name')
                     ->label(__('admin/user-resource.custom_attributes.role'))
                     ->badge()
                     // @phpstan-ignore-next-line
-                    ->hidden(fn (Tables\Contracts\HasTable $livewire): bool => $livewire->activeTab !== 'all')
+                    ->hidden(fn (HasTable $livewire): bool => $livewire->activeTab !== 'all')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('deleted_at')
+                IconColumn::make('deleted_at')
                     ->label(__('common.is_active'))
                     ->state(function (User $record): bool {
                         // @codeCoverageIgnoreStart
@@ -139,16 +155,16 @@ final class UserResource extends Resource
                     ->icon(fn (string $state): string => $state === '' || $state === '0' ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
                     ->color(fn (string $state): string => $state === '' || $state === '0' ? 'success' : 'danger')
                     ->boolean()
-                    ->visible(fn (Tables\Contracts\HasTable $livewire): bool => isset($livewire->getTableFilterState('trashed')['value']) &&
+                    ->visible(fn (HasTable $livewire): bool => isset($livewire->getTableFilterState('trashed')['value']) &&
                         $livewire->getTableFilterState('trashed')['value'] === '1'
                     ),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('common.created_at'))
                     ->dateTime()
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('email_verified_at')
+                TernaryFilter::make('email_verified_at')
                     ->label(__('common.is_verified'))
                     ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at'))
                     ->nullable()
@@ -160,12 +176,12 @@ final class UserResource extends Resource
                         false: fn (Builder $query): Builder => $query->whereNull('email_verified_at'),
                         blank: fn (Builder $query): Builder => $query,
                     ),
-                Tables\Filters\TrashedFilter::make(),
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from')
+                TrashedFilter::make(),
+                Filter::make('created_at')
+                    ->schema([
+                        DatePicker::make('created_from')
                             ->label(__('common.created_from')),
-                        Forms\Components\DatePicker::make('created_until')
+                        DatePicker::make('created_until')
                             ->label(__('common.created_until'))
                             ->default(now()),
                     ])
@@ -192,13 +208,13 @@ final class UserResource extends Resource
 
                         if ($data['created_from'] ?? null) {
                             // @phpstan-ignore-next-line
-                            $indicators[] = Tables\Filters\Indicator::make(__('common.created_from').' '.Carbon::parse($data['created_from'])->translatedFormat(__('common.formats.date_string')))
+                            $indicators[] = Indicator::make(__('common.created_from').' '.Carbon::parse($data['created_from'])->translatedFormat(__('common.formats.date_string')))
                                 ->removeField('created_from');
                         }
 
                         if ($data['created_until'] ?? null) {
                             // @phpstan-ignore-next-line
-                            $indicators[] = Tables\Filters\Indicator::make(__('common.created_until').' '.Carbon::parse($data['created_until'])->translatedFormat(__('common.formats.date_string')))
+                            $indicators[] = Indicator::make(__('common.created_until').' '.Carbon::parse($data['created_until'])->translatedFormat(__('common.formats.date_string')))
                                 ->removeField('created_until');
                         }
 
@@ -206,10 +222,10 @@ final class UserResource extends Resource
                     }),
                 // @codeCoverageIgnoreEnd
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->button(),
-                Tables\Actions\Action::make('changePassword')
+                Action::make('changePassword')
                     ->label(__('admin/user-resource.actions.change_password'))
                     ->action(function (User $record, array $data): void {
                         /** @var string $psw */
@@ -221,19 +237,19 @@ final class UserResource extends Resource
                             ->title(__('admin/user-resource.flash.password_changed'))
                             ->send();
                     })
-                    ->form([
-                        Forms\Components\Grid::make()
+                    ->schema([
+                        Grid::make()
                             ->schema([
-                                Forms\Components\TextInput::make('new_password')
+                                TextInput::make('new_password')
                                     ->label(__('admin/user-resource.custom_attributes.new_password'))
                                     ->password()
                                     ->required()
                                     ->rule(Password::default()),
-                                Forms\Components\TextInput::make('new_password_confirmation')
+                                TextInput::make('new_password_confirmation')
                                     ->label(__('admin/user-resource.custom_attributes.new_password_confirmation'))
                                     ->password()
                                     ->required()
-                                    ->rule('required', fn (Forms\Get $get): bool => (bool) $get('new_password'))
+                                    ->rule('required', fn (Get $get): bool => (bool) $get('new_password'))
                                     ->same('new_password'),
                             ]),
                     ])
@@ -243,7 +259,7 @@ final class UserResource extends Resource
                     ->icon('heroicon-o-key')
                     ->visible(fn (User $record): bool => ! $record->hasRole(Role::SUPER_ADMIN)),
 
-                Tables\Actions\Action::make('changeRole')
+                Action::make('changeRole')
                     ->label(__('admin/user-resource.actions.change_role'))
                     ->action(function (User $record, array $data): void {
                         /** @var string $role */
@@ -255,10 +271,10 @@ final class UserResource extends Resource
                             ->title(__('admin/user-resource.flash.role_changed'))
                             ->send();
                     })
-                    ->form([
-                        Forms\Components\Grid::make()
+                    ->schema([
+                        Grid::make()
                             ->schema([
-                                Forms\Components\Select::make('new_role')
+                                Select::make('new_role')
                                     ->label(__('admin/user-resource.custom_attributes.role'))
                                     ->relationship(
                                         name: 'roles',
@@ -286,7 +302,7 @@ final class UserResource extends Resource
                     ->visible(fn (User $record): bool => ! $record->hasRole(Role::SUPER_ADMIN)),
             ])
             ->headerActions([
-                Tables\Actions\ExportAction::make()
+                ExportAction::make()
                     ->label(__('common.export'))
                     ->modalHeading(__('admin/user-resource.list.export.modal_heading'))
                     ->exporter(UserExporter::class)
@@ -297,7 +313,7 @@ final class UserResource extends Resource
                         ExportFormat::Csv,
                     ]),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ])
             ->defaultSort('name')
@@ -329,9 +345,9 @@ final class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Http\Middleware\FilamentAuthenticateRedirect;
+use App\Http\Responses\RegisterResponse;
 use App\Models\Role;
 use App\Models\User;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Carbon\CarbonImmutable;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse;
+use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
-use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +42,7 @@ final class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             RegistrationResponse::class,
-            \App\Http\Responses\RegisterResponse::class
+            RegisterResponse::class
         );
 
         $this->app->singleton(

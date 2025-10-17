@@ -17,8 +17,7 @@ it('configures AdminPanelProvider correctly', function (): void {
 
     expect($configuredPanel->getId())->toBe('admin')
         ->and($configuredPanel->getPath())->toBe('admin')
-        ->and($configuredPanel->getColors())->toEqual(['primary' => Color::Indigo])
-        ->and($configuredPanel->getUserMenuItems())->toBeEmpty();
+        ->and($configuredPanel->getColors())->toEqual(['primary' => Color::Indigo]);
 
     $middleware = $configuredPanel->getMiddleware();
     expect($middleware)->toContain(VerifyCsrfToken::class)

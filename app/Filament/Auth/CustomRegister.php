@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Filament\Auth;
 
 use App\Models\Role;
+use App\Models\User;
 use App\Models\Workspace;
-use Filament\Pages\Auth\Register;
+use Filament\Auth\Pages\Register;
 use Illuminate\Database\Eloquent\Model;
 use Override;
 
@@ -18,7 +19,7 @@ final class CustomRegister extends Register
     #[Override]
     protected function handleRegistration(array $data): Model
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = $this->getUserModel()::create($data);
 
         $user->roles()->attach(

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources\RoleResource\Pages;
 
 use App\Filament\Admin\Resources\RoleResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Override;
 
@@ -19,7 +19,7 @@ final class ListRoles extends ListRecords
         return __('admin/role-resource.list.title');
     }
 
-    public function setPage($page, $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
+    public function setPage(int|string $page, ?string $pageName = 'page'): void // @phpstan-ignore-line @pest-ignore-type
     {
         parent::setPage($page, $pageName);
 
@@ -29,7 +29,7 @@ final class ListRoles extends ListRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

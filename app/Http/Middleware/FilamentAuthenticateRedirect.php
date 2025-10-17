@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate as BaseAuthenticate;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Override;
 
@@ -27,6 +28,6 @@ class FilamentAuthenticateRedirect extends BaseAuthenticate
             return null;
         }
 
-        return Filament::getPanel('auth')->route(\Illuminate\Auth\Events\Login::class);
+        return Filament::getPanel('auth')->route(Login::class);
     }
 }
