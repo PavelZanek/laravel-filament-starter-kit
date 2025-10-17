@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Admin\Resources\RoleResource\Pages;
+namespace App\Filament\Admin\Resources\Roles\Pages;
 
-use App\Filament\Admin\Resources\RoleResource;
+use App\Filament\Admin\Resources\Roles\RoleResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Override;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Filament\Pages;
 
-use App\Filament\Admin\Resources\UserResource;
+use App\Filament\Admin\Resources\Users\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
@@ -61,18 +61,18 @@ it('can list records', function (): void {
 
     $users->add($this->user);
 
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->assertCanSeeTableRecords($users);
 });
 
 it('returns correct title', function (): void {
-    $listUsers = new UserResource\Pages\ListUsers;
+    $listUsers = new Users\Pages\ListUsers;
 
     expect($listUsers->getTitle())->toBe(__('admin/user-resource.list.title'));
 });
 
 it('dispatches scroll-to-top on page set', function (): void {
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->call('setPage', 2)
         ->assertDispatched('scroll-to-top');
 });
@@ -80,7 +80,7 @@ it('dispatches scroll-to-top on page set', function (): void {
 it('has tabs', function (string $tab): void {
     User::factory()->withRole($tab === 'all' ? Role::AUTHENTICATED : $tab)->count(3)->create();
 
-    $listUsers = new UserResource\Pages\ListUsers;
+    $listUsers = new Users\Pages\ListUsers;
 
     $tabs = $listUsers->getTabs();
 
@@ -98,19 +98,19 @@ it('has tabs', function (string $tab): void {
 })->with(['all', Role::SUPER_ADMIN, Role::ADMIN, Role::AUTHENTICATED]);
 
 it('has column', function (string $column): void {
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->assertTableColumnExists($column);
 })->with(['name', 'email', 'roles.name', 'created_at']);
 
 it('can render column', function (string $column): void {
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->assertCanRenderTableColumn($column);
 })->with(['name', 'email', 'roles.name', 'created_at']);
 
 it('can sort column', function (string $column): void {
     $records = User::factory(5)->withRole()->create();
 
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->sortTable($column)
         ->assertCanSeeTableRecords($records->sortBy($column), inOrder: true)
         ->sortTable($column, 'desc')
@@ -122,7 +122,7 @@ it('can search column', function (string $column): void {
 
     $value = $records->first()->{$column};
 
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->searchTable($value)
         ->assertCanSeeTableRecords($records->where($column, $value))
         ->assertCanNotSeeTableRecords($records->where($column, '!=', $value));
@@ -134,7 +134,7 @@ it('can filter records', function (string $filter): void {
 
     $users = User::all();
 
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->assertCanSeeTableRecords($users)
         ->filterTable($filter)
         ->assertCanSeeTableRecords($users->whereNotNull($filter))
@@ -145,7 +145,7 @@ it('shows correct filter indicators', function (string $filter): void {
     $createdFrom = now()->subDays(5)->toDateString();
     $createdUntil = now()->subDay()->toDateString();
 
-    $component = livewire(UserResource\Pages\ListUsers::class)
+    $component = livewire(Users\Pages\ListUsers::class)
         ->filterTable($filter, [
             'created_from' => $createdFrom,
             'created_until' => $createdUntil,
@@ -164,7 +164,7 @@ it('can not delete records from table', function (): void {
 
     $users = User::all();
 
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->assertCanSeeTableRecords($users)
         ->assertActionDoesNotExist(TableDeleteAction::class)
         ->assertTableBulkActionDoesNotExist(DeleteBulkAction::class);
@@ -185,7 +185,7 @@ it('can create a record', function (): void {
     $newData = User::factory()->make();
     $role = Role::factory()->create(['name' => Role::ADMIN]);
 
-    livewire(UserResource\Pages\CreateUser::class)
+    livewire(Users\Pages\CreateUser::class)
         ->fillForm([
             'name' => $newData->name,
             'email' => $newData->email,
@@ -203,7 +203,7 @@ it('can create a record', function (): void {
 });
 
 it('can validate required', function (string $column): void {
-    livewire(UserResource\Pages\CreateUser::class)
+    livewire(Users\Pages\CreateUser::class)
         ->fillForm([$column => null])
         ->call('create')
         ->assertHasFormErrors([$column => ['required']]);
@@ -212,21 +212,21 @@ it('can validate required', function (string $column): void {
 it('can validate unique', function (string $column): void {
     $record = User::factory()->create();
 
-    livewire(UserResource\Pages\CreateUser::class)
+    livewire(Users\Pages\CreateUser::class)
         ->fillForm(['email' => $record->email])
         ->call('create')
         ->assertHasFormErrors([$column => ['unique']]);
 })->with(['email']);
 
 it('can validate email', function (string $column): void {
-    livewire(UserResource\Pages\CreateUser::class)
+    livewire(Users\Pages\CreateUser::class)
         ->fillForm(['email' => Str::random()])
         ->call('create')
         ->assertHasFormErrors([$column => ['email']]);
 })->with(['email']);
 
 it('can validate max length', function (string $column): void {
-    livewire(UserResource\Pages\CreateUser::class)
+    livewire(Users\Pages\CreateUser::class)
         ->fillForm([$column => Str::random(256)])
         ->call('create')
         ->assertHasFormErrors([$column => ['max']]);
@@ -239,7 +239,7 @@ it('can render the edit page', function (): void {
 });
 
 it('can retrieve record data', function (): void {
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $this->user->getRouteKey(),
     ])
         ->assertFormSet([
@@ -251,7 +251,7 @@ it('can retrieve record data', function (): void {
 it('can update a record', function (): void {
     $newData = User::factory()->make();
 
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $this->user->getRouteKey(),
     ])
         ->fillForm([
@@ -269,7 +269,7 @@ it('can update a record', function (): void {
 it('can validate required (edit page)', function (string $column): void {
     $user = User::factory()->withRole()->create();
 
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $user->getRouteKey(),
     ])
         ->fillForm([$column => null])
@@ -280,7 +280,7 @@ it('can validate required (edit page)', function (string $column): void {
 it('can validate unique (edit page)', function (string $column): void {
     $record = User::factory()->create();
 
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $record->getRouteKey(),
     ])
         ->fillForm(['email' => $this->user->email])
@@ -289,7 +289,7 @@ it('can validate unique (edit page)', function (string $column): void {
 })->with(['email']);
 
 it('can validate email (edit page)', function (string $column): void {
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $this->user->getRouteKey(),
     ])
         ->fillForm(['email' => Str::random()])
@@ -298,7 +298,7 @@ it('can validate email (edit page)', function (string $column): void {
 })->with(['email']);
 
 it('can validate max length (edit page)', function (string $column): void {
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $this->user->getRouteKey(),
     ])
         ->fillForm([$column => Str::random(256)])
@@ -309,7 +309,7 @@ it('can validate max length (edit page)', function (string $column): void {
 it('can soft delete a record', function (): void {
     $user = User::factory()->withRole()->create();
 
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $user->getRouteKey(),
     ])
         ->callAction(DeleteAction::class);
@@ -318,7 +318,7 @@ it('can soft delete a record', function (): void {
 });
 
 it('can not delete super_admin user', function (): void {
-    livewire(UserResource\Pages\EditUser::class, [
+    livewire(Users\Pages\EditUser::class, [
         'record' => $this->user->getRouteKey(),
     ])
         ->assertActionHidden(DeleteAction::class);
@@ -328,7 +328,7 @@ it('can change user password via changePassword action', function (): void {
     $user = User::factory()->withRole(Role::ADMIN)->create();
     $newPassword = 'NewPassword!123';
 
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->callTableAction('changePassword', $user->getKey(), [
             'new_password' => $newPassword,
             'new_password_confirmation' => $newPassword,
@@ -342,7 +342,7 @@ it('can change user role via changeRole action', function (): void {
     $user = User::factory()->withRole(Role::ADMIN)->create();
     $newRole = Role::factory()->create(['name' => Role::AUTHENTICATED]);
 
-    livewire(UserResource\Pages\ListUsers::class)
+    livewire(Users\Pages\ListUsers::class)
         ->callTableAction('changeRole', $user->getKey(), [
             'new_role' => $newRole->getKey(),
         ])

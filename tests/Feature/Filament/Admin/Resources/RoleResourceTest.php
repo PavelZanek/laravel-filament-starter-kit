@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Filament\Pages;
 
-use App\Filament\Admin\Resources\RoleResource;
+use App\Filament\Admin\Resources\Roles\RoleResource;
 use App\Models\Role;
 use App\Models\User;
 use Filament\Actions\EditAction;
@@ -62,29 +62,29 @@ it('can list records', function (): void {
 
     $records->add($this->user->roles()->first());
 
-    livewire(RoleResource\Pages\ListRoles::class)
+    livewire(Roles\Pages\ListRoles::class)
         ->assertCanSeeTableRecords($records);
 });
 
 it('returns correct title', function (): void {
-    $listUsers = new RoleResource\Pages\ListRoles;
+    $listUsers = new Roles\Pages\ListRoles;
 
     expect($listUsers->getTitle())->toBe(__('admin/role-resource.list.title'));
 });
 
 it('dispatches scroll-to-top on page set', function (): void {
-    livewire(RoleResource\Pages\ListRoles::class)
+    livewire(Roles\Pages\ListRoles::class)
         ->call('setPage', 2)
         ->assertDispatched('scroll-to-top');
 });
 
 it('has column', function (string $column): void {
-    livewire(RoleResource\Pages\ListRoles::class)
+    livewire(Roles\Pages\ListRoles::class)
         ->assertTableColumnExists($column);
 })->with(['name', 'guard_name', 'permissions_count', 'users_count', 'is_default', 'updated_at']);
 
 it('can render column', function (string $column): void {
-    livewire(RoleResource\Pages\ListRoles::class)
+    livewire(Roles\Pages\ListRoles::class)
         ->assertCanRenderTableColumn($column);
 })->with(['name', 'guard_name', 'permissions_count', 'users_count', 'is_default', 'updated_at']);
 
@@ -98,7 +98,7 @@ it('can search column', function (string $column): void {
 
     $value = $records->first()->{$column};
 
-    livewire(RoleResource\Pages\ListRoles::class)
+    livewire(Roles\Pages\ListRoles::class)
         ->searchTable($value)
         ->assertCanSeeTableRecords($records->where($column, $value))
         ->assertCanNotSeeTableRecords($records->where($column, '!=', $value));
@@ -107,7 +107,7 @@ it('can search column', function (string $column): void {
 it('can not delete records from table', function (): void {
     $records = Role::query()->get();
 
-    livewire(RoleResource\Pages\ListRoles::class)
+    livewire(Roles\Pages\ListRoles::class)
         ->assertCanSeeTableRecords($records)
         ->assertActionDoesNotExist(DeleteAction::class)
         ->assertTableBulkActionDoesNotExist(DeleteBulkAction::class);
@@ -125,7 +125,7 @@ it('can not render the create page for disallowed user', function (): void {
 });
 
 it('can create a record', function (): void {
-    livewire(RoleResource\Pages\CreateRole::class)
+    livewire(Roles\Pages\CreateRole::class)
         ->fillForm([
             'name' => 'Test',
             'guard_name' => null,
@@ -143,7 +143,7 @@ it('can create a record', function (): void {
 });
 
 it('can validate required', function (string $column): void {
-    livewire(RoleResource\Pages\CreateRole::class)
+    livewire(Roles\Pages\CreateRole::class)
         ->fillForm([$column => null])
         ->call('create')
         ->assertHasFormErrors([$column => ['required']]);
@@ -152,14 +152,14 @@ it('can validate required', function (string $column): void {
 it('can validate unique', function (string $column): void {
     $record = Role::factory()->create(['name' => 'Test']);
 
-    livewire(RoleResource\Pages\CreateRole::class)
+    livewire(Roles\Pages\CreateRole::class)
         ->fillForm(['name' => $record->name])
         ->call('create')
         ->assertHasFormErrors([$column => ['unique']]);
 })->with(['name']);
 
 it('can validate max length', function (string $column): void {
-    livewire(RoleResource\Pages\CreateRole::class)
+    livewire(Roles\Pages\CreateRole::class)
         ->fillForm([$column => Str::random(256)])
         ->call('create')
         ->assertHasFormErrors([$column => ['max']]);
@@ -176,7 +176,7 @@ it('can render the edit page', function (): void {
 it('can retrieve record data', function (): void {
     $role = Role::factory()->create(['name' => 'Test', 'is_default' => false]);
 
-    livewire(RoleResource\Pages\EditRole::class, [
+    livewire(Roles\Pages\EditRole::class, [
         'record' => $role->getRouteKey(),
     ])
         ->assertFormSet([
@@ -188,7 +188,7 @@ it('can retrieve record data', function (): void {
 it('can update a record', function (): void {
     $record = Role::factory()->create(['name' => 'Test', 'is_default' => false]);
 
-    livewire(RoleResource\Pages\EditRole::class, [
+    livewire(Roles\Pages\EditRole::class, [
         'record' => $record->getRouteKey(),
     ])
         ->fillForm([
@@ -206,7 +206,7 @@ it('can update a record', function (): void {
 it('can validate required (edit page)', function (string $column): void {
     $record = Role::factory()->create(['name' => 'Test', 'is_default' => false]);
 
-    livewire(RoleResource\Pages\EditRole::class, [
+    livewire(Roles\Pages\EditRole::class, [
         'record' => $record->getRouteKey(),
     ])
         ->fillForm([$column => null])
@@ -217,7 +217,7 @@ it('can validate required (edit page)', function (string $column): void {
 it('can validate unique (edit page)', function (string $column): void {
     $record = Role::factory()->create(['name' => 'Test', 'is_default' => false]);
 
-    livewire(RoleResource\Pages\EditRole::class, [
+    livewire(Roles\Pages\EditRole::class, [
         'record' => $record->getRouteKey(),
     ])
         ->fillForm(['name' => $this->user->roles()->first()->name])
@@ -228,7 +228,7 @@ it('can validate unique (edit page)', function (string $column): void {
 it('can validate max length (edit page)', function (string $column): void {
     $record = Role::factory()->create(['name' => 'Test', 'is_default' => false]);
 
-    livewire(RoleResource\Pages\EditRole::class, [
+    livewire(Roles\Pages\EditRole::class, [
         'record' => $record->getRouteKey(),
     ])
         ->fillForm([$column => Str::random(256)])
@@ -239,7 +239,7 @@ it('can validate max length (edit page)', function (string $column): void {
 it('can delete a record', function (): void {
     $record = Role::factory()->create(['name' => 'Test', 'is_default' => false]);
 
-    livewire(RoleResource\Pages\EditRole::class, [
+    livewire(Roles\Pages\EditRole::class, [
         'record' => $record->getRouteKey(),
     ])
         ->callAction(DeleteAction::class);
@@ -250,7 +250,7 @@ it('can delete a record', function (): void {
 })->skip();
 
 it('can not delete default role', function (): void {
-    livewire(RoleResource\Pages\EditRole::class, [
+    livewire(Roles\Pages\EditRole::class, [
         'record' => $this->user->roles()->first()->getRouteKey(),
     ])
         ->assertActionHidden(DeleteAction::class);
@@ -259,7 +259,7 @@ it('can not delete default role', function (): void {
 it('shows edit action for permitted non-default role', function (): void {
     $role = Role::factory()->create(['is_default' => false]);
 
-    livewire(RoleResource\Pages\ViewRole::class, [
+    livewire(Roles\Pages\ViewRole::class, [
         'record' => $role->getRouteKey(),
     ])->assertActionExists(EditAction::class);
 });
@@ -267,7 +267,7 @@ it('shows edit action for permitted non-default role', function (): void {
 it('hides edit action for default role', function (): void {
     $role = Role::factory()->create();
 
-    livewire(RoleResource\Pages\ViewRole::class, [
+    livewire(Roles\Pages\ViewRole::class, [
         'record' => $role->getRouteKey(),
     ])->assertActionHidden(EditAction::class);
 });

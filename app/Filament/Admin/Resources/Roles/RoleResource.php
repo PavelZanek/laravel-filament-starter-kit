@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources\Roles;
 
-use App\Filament\Admin\Resources\RoleResource\Pages\CreateRole;
-use App\Filament\Admin\Resources\RoleResource\Pages\EditRole;
-use App\Filament\Admin\Resources\RoleResource\Pages\ListRoles;
-use App\Filament\Admin\Resources\RoleResource\Pages\ViewRole;
+use App\Filament\Admin\Resources\Roles\Pages\CreateRole;
+use App\Filament\Admin\Resources\Roles\Pages\EditRole;
+use App\Filament\Admin\Resources\Roles\Pages\ListRoles;
+use App\Filament\Admin\Resources\Roles\Pages\ViewRole;
 use App\Helpers\ProjectHelper;
 use App\Models\Role;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
