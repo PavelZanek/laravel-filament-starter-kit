@@ -65,19 +65,6 @@ final class AppServiceProvider extends ServiceProvider
             return $user->hasRole(Role::SUPER_ADMIN) ? true : null;
         });
 
-        // @codeCoverageIgnoreStart
-        LanguageSwitch::configureUsing(function (LanguageSwitch $switch): void {
-            $switch->locales([
-                'cs',
-                'en',
-            ])
-                ->flags([
-                    'cs' => __('common.flags.cs'),
-                    'en' => __('common.flags.en'),
-                ]);
-        });
-        // @codeCoverageIgnoreEnd
-
         // Authenticate::redirectUsing(fn (): string => Filament::getPanel('auth')->route('auth.login'));
 
         $this->configureCommands();
@@ -85,6 +72,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureUrl();
         $this->configureDates();
         $this->configureVite();
+        $this->configureLanguageSwitch();
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::SCRIPTS_AFTER,
@@ -132,5 +120,27 @@ final class AppServiceProvider extends ServiceProvider
     private function configureVite(): void
     {
         Vite::useAggressivePrefetching();
+    }
+
+    /*
+     * Configure the Language Switch plugin.
+     */
+    private function configureLanguageSwitch(): void
+    {
+        // @codeCoverageIgnoreStart
+        if (! $this->app->runningInConsole()) {
+            LanguageSwitch::configureUsing(function (LanguageSwitch $switch): void {
+                $switch->locales([
+                    'cs',
+                    'en',
+                ])
+                    ->flags([
+                        'cs' => asset('flags/cz.svg'),
+                        'en' => asset('flags/gb.svg'),
+                    ])
+                    ->visible(outsidePanels: true);
+            });
+        }
+        // @codeCoverageIgnoreEnd
     }
 }

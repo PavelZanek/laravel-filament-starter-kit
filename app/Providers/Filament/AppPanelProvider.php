@@ -75,6 +75,7 @@ final class AppPanelProvider extends PanelProvider
             // ->tenantMiddleware([
             //     ApplyTenantScopes::class,
             // ], isPersistent: true)
+            ->viteTheme('resources/css/filament/app/theme.css')
             ->colors([
                 'primary' => Color::Emerald,
             ])
@@ -102,10 +103,9 @@ final class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->renderHook(
-                // PanelsRenderHook::BODY_END,
-                PanelsRenderHook::BODY_END,
-                fn (): Factory|View => view('footer')
-            );
+             ->renderHook(
+                 PanelsRenderHook::BODY_END,
+                 fn (): Factory|View => view('footer')
+             );
     }
 }

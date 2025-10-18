@@ -28,6 +28,7 @@ final class AuthPanelProvider extends PanelProvider
             ->path('')
             ->databaseTransactions()
             ->spa()
+            ->viteTheme('resources/css/filament/auth/theme.css')
             ->colors([
                 'primary' => Color::Emerald,
             ])

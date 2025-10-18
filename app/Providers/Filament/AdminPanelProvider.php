@@ -69,6 +69,7 @@ final class AdminPanelProvider extends PanelProvider
             ->spa()
             ->login()
             ->userMenuItems($userMenuItems)
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->colors([
                 'primary' => Color::Indigo,
             ])
