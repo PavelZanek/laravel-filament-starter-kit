@@ -46,9 +46,9 @@ final class CreateRole extends CreateRecord
         return $result;
     }
 
-    protected function afterCreate(): void
+    private function afterCreate(): void
     {
-        $permissionModel = Utils::getPermissionModel();
+        Utils::getPermissionModel();
 
         if ($this->permissions->isNotEmpty()) {
             $this->record->syncPermissions($this->permissions);

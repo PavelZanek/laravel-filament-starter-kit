@@ -103,9 +103,9 @@ final class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-             ->renderHook(
-                 PanelsRenderHook::BODY_END,
-                 fn (): Factory|View => view('footer')
-             );
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): Factory|View => view('footer')
+            );
     }
 }

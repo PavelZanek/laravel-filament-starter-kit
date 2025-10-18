@@ -70,7 +70,7 @@ final class EditRole extends EditRecord
         return $result;
     }
 
-    protected function afterSave(): void
+    private function afterSave(): void
     {
         if ($this->permissions->isNotEmpty()) {
             $this->record->syncPermissions($this->permissions);
