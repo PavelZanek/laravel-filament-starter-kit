@@ -13,6 +13,12 @@ return [
         'show_model_path' => true,
         'is_scoped_to_tenant' => false,
         'cluster' => null,
+        'tabs' => [
+            'pages' => true,
+            'widgets' => true,
+            'resources' => true,
+            'custom_permissions' => true,
+        ],
     ],
 
     'tenant_model' => null,
@@ -23,7 +29,7 @@ return [
         'enabled' => true,
         'name' => 'super_admin',
         'define_via_gate' => false,
-        'intercept_gate' => 'before', // after
+        'intercept_gate' => 'before',
     ],
 
     'panel_user' => [
@@ -31,61 +37,85 @@ return [
         'name' => 'panel_user',
     ],
 
-    'permission_prefixes' => [
-        'resource' => [
-            'view',
-            'view_any',
+    'permissions' => [
+        'separator' => '_',
+        'case' => 'snake',
+        'generate' => true,
+    ],
+
+    'policies' => [
+        'path' => app_path('Policies'),
+        'merge' => false,
+        'generate' => true,
+        'methods' => [
+            'viewAny', 'view', 'create', 'update', 'delete', 'deleteAny',
+        ],
+        'single_parameter_methods' => [
+            'viewAny',
             'create',
-            'update',
-            'restore',
-            'restore_any',
-            'replicate',
-            'reorder',
-            'delete',
-            'delete_any',
-            'force_delete',
-            'force_delete_any',
+            'deleteAny',
         ],
-
-        'page' => 'page',
-        'widget' => 'widget',
     ],
 
-    'entities' => [
-        'pages' => true,
-        'widgets' => true,
-        'resources' => true,
-        'custom_permissions' => true,
+    'localization' => [
+        'enabled' => false,
+        'key' => 'filament-shield::filament-shield',
     ],
 
-    'generator' => [
-        'option' => 'policies_and_permissions',
-        'policy_directory' => 'Policies',
-        'policy_namespace' => 'Policies',
-    ],
-
-    'exclude' => [
-        'enabled' => true,
-
-        'pages' => [
-            'Dashboard',
+    'resources' => [
+        'subject' => 'model',
+        'manage' => [
+            App\Filament\Admin\Resources\Roles\RoleResource::class => [
+                'viewAny',
+                'view',
+                'create',
+                'update',
+                'delete',
+                'deleteAny',
+            ],
+            App\Filament\Admin\Resources\Users\UserResource::class => [
+                'viewAny',
+                'view',
+                'create',
+                'update',
+                'delete',
+                'deleteAny',
+                'restore',
+                'restoreAny',
+                'replicate',
+                'reorder',
+                'forceDelete',
+                'forceDeleteAny',
+            ],
         ],
-
-        'widgets' => [
-            'AccountWidget', 'FilamentInfoWidget',
-        ],
-
-        'resources' => [],
+        'exclude' => [],
     ],
+
+    'pages' => [
+        'subject' => 'class',
+        'prefix' => 'view',
+        'exclude' => [
+            Filament\Pages\Dashboard::class,
+        ],
+    ],
+
+    'widgets' => [
+        'subject' => 'class',
+        'prefix' => 'view',
+        'exclude' => [
+            Filament\Widgets\AccountWidget::class,
+            Filament\Widgets\FilamentInfoWidget::class,
+        ],
+    ],
+
+    'custom_permissions' => [],
 
     'discovery' => [
-        'discover_all_resources' => false,
-        'discover_all_widgets' => false,
-        'discover_all_pages' => false,
+        'discover_all_resources' => true,
+        'discover_all_widgets' => true,
+        'discover_all_pages' => true,
     ],
 
-    'register_role_policy' => [
-        'enabled' => true,
-    ],
+    'register_role_policy' => true,
 
 ];

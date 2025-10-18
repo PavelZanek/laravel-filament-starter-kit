@@ -40,27 +40,25 @@ final class RoleResource extends Resource implements HasShieldPermissions
      */
     public static function getResourceEntitiesSchema(): array
     {
-        // Get all resources from all panels and map them to correct permission names
-        $resourceEntities = self::getAllResourcesFromAllPanels()
-            ->sortKeys()
+        // Use FilamentShield's getResources() which properly discovers all resources
+        return collect(\BezhanSalleh\FilamentShield\Facades\FilamentShield::getResources())
             ->map(
                 function (array $entity): Section { // @phpstan-ignore argument.type
-                    /** @var array{resource:string,model:string,fqcn:string} $entity */
-                    $sectionLabel = $entity['model'];
+                    /** @var array{resourceFqcn:string,model:string,modelFqcn:string,permissions:array} $entity */
+                    $sectionLabel = self::shield()->hasLocalizedPermissionLabels()
+                        ? \BezhanSalleh\FilamentShield\Facades\FilamentShield::getLocalizedResourceLabel($entity['resourceFqcn'])
+                        : $entity['model'];
 
                     return Section::make($sectionLabel)
-                        ->description(fn (): HtmlString => new HtmlString('<span style="word-break: break-word;">'.Utils::showModelPath($entity['fqcn']).'</span>'))
+                        ->description(fn (): HtmlString => new HtmlString('<span style="word-break: break-word;">'.Utils::showModelPath($entity['modelFqcn']).'</span>'))
                         ->compact()
                         ->schema([
                             self::getCheckBoxListComponentForResource($entity),
                         ])
                         ->columnSpan(fn (): int => (int) self::shield()->getSectionColumnSpan())
                         ->collapsible();
-                });
-
-        // Return all resource entities (custom entities are now included in getAllResourcesFromAllPanels)
-        /** @var array<Section> */
-        return $resourceEntities->toArray();
+                })
+            ->toArray();
     }
 
     /**
@@ -208,71 +206,5 @@ final class RoleResource extends Resource implements HasShieldPermissions
                 return [$permission => $label];
             })
             ->toArray();
-    }
-
-    /**
-     * Get all resources from all Filament panels and map them to correct permission names
-     *
-     * @return \Illuminate\Support\Collection<string, array{resource:string,model:string,fqcn:string}>
-     */
-    private static function getAllResourcesFromAllPanels(): \Illuminate\Support\Collection
-    {
-        /** @var \Illuminate\Support\Collection<string, array{resource:string,model:string,fqcn:string}> $allResources */
-        $allResources = collect();
-
-        // Map of actual permission prefixes to model names based on existing permissions in database
-        $permissionToModelMap = self::buildPermissionToModelMap();
-
-        foreach ($permissionToModelMap as $permissionPrefix => $modelName) {
-            $allResources->put($permissionPrefix, [
-                'resource' => $permissionPrefix,
-                'model' => $modelName,
-                'fqcn' => "App\\Models\\{$modelName}",
-            ]);
-        }
-
-        return $allResources;
-    }
-
-    /**
-     * Build a map of permission prefixes to model names based on existing permissions
-     *
-     * @return array<string, string>
-     */
-    private static function buildPermissionToModelMap(): array
-    {
-        // Get all unique permission suffixes from database (excluding filament-panel and widget permissions)
-        $permissions = \Spatie\Permission\Models\Permission::where('name', 'not like', 'filament-panel.%')
-            ->where('name', 'not like', 'widget_%')
-            ->get(['name'])
-            ->pluck('name')
-            ->map(function (mixed $permission): ?string {
-                /** @var string $permission */
-                // Extract the resource name from permission (e.g., 'view_any_currency' -> 'currency')
-                if (preg_match('/^[a-z_]+_([a-z_]+)$/', $permission, $matches)) {
-                    return $matches[1];
-                }
-
-                return null;
-            })
-            ->filter()
-            ->unique()
-            ->values();
-
-        // Map resource names to proper model names
-        $modelMap = [
-            'currency' => 'Currency',
-            'role' => 'Role',
-            'user' => 'User',
-            'workspace' => 'Workspace',
-        ];
-
-        /** @var array<string, string> */
-        return $permissions->mapWithKeys(function (mixed $resource) use ($modelMap): array {
-            /** @var non-falsy-string $resource */
-            $modelName = $modelMap[$resource] ?? str($resource)->studly()->toString();
-
-            return [$resource => $modelName];
-        })->toArray();
     }
 }
