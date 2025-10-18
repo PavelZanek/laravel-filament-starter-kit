@@ -24,3 +24,10 @@ yarn-error.log
 /.zed
 /storage/rector/
 .phpstorm.meta.php
+.github/copilot-instructions.md
+.junie
+.cursor
+.mcp.json
+AGENTS.md
+boost.json
+CLAUDE.md
