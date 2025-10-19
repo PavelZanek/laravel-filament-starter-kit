@@ -104,6 +104,11 @@ it('has all required table columns and can render them', function (): void {
 });
 
 it('has comprehensive tab system and filtering functionality', function (): void {
+    // Get current counts before creating test users
+    $initialSuperAdminCount = User::query()->role(Role::SUPER_ADMIN)->count();
+    $initialAdminCount = User::query()->role(Role::ADMIN)->count();
+    $initialAuthenticatedCount = User::query()->role(Role::AUTHENTICATED)->count();
+
     // Create test users with different roles
     User::factory()->withRole(Role::AUTHENTICATED)->count(3)->create();
     User::factory()->withRole(Role::SUPER_ADMIN)->count(3)->create();
@@ -122,26 +127,26 @@ it('has comprehensive tab system and filtering functionality', function (): void
         ->and($tabs[$tabSlug]->getLabel())->toBe(__('common.all'))
         ->and((int) $tabs[$tabSlug]->getBadge())->toBe(User::query()->count());
 
-    // Test super admin tab
+    // Test super admin tab - use dynamic count
     $tabSlug = str(Role::SUPER_ADMIN)->slug()->toString();
     expect($tabs)->toHaveKey($tabSlug)
         ->and($tabs[$tabSlug])->toBeInstanceOf(Tab::class)
         ->and($tabs[$tabSlug]->getLabel())->toBe(Role::ROLES[Role::SUPER_ADMIN])
-        ->and((int) $tabs[$tabSlug]->getBadge())->toBe(4); // 1 from migration + 3 created = 4
+        ->and((int) $tabs[$tabSlug]->getBadge())->toBe($initialSuperAdminCount + 3);
 
-    // Test admin tab
+    // Test admin tab - use dynamic count
     $tabSlug = str(Role::ADMIN)->slug()->toString();
     expect($tabs)->toHaveKey($tabSlug)
         ->and($tabs[$tabSlug])->toBeInstanceOf(Tab::class)
         ->and($tabs[$tabSlug]->getLabel())->toBe(Role::ROLES[Role::ADMIN])
-        ->and((int) $tabs[$tabSlug]->getBadge())->toBe(User::query()->role(Role::ADMIN)->count());
+        ->and((int) $tabs[$tabSlug]->getBadge())->toBe($initialAdminCount + 3);
 
-    // Test authenticated tab
+    // Test authenticated tab - use dynamic count
     $tabSlug = str(Role::AUTHENTICATED)->slug()->toString();
     expect($tabs)->toHaveKey($tabSlug)
         ->and($tabs[$tabSlug])->toBeInstanceOf(Tab::class)
         ->and($tabs[$tabSlug]->getLabel())->toBe(Role::ROLES[Role::AUTHENTICATED])
-        ->and((int) $tabs[$tabSlug]->getBadge())->toBe(User::query()->role(Role::AUTHENTICATED)->count());
+        ->and((int) $tabs[$tabSlug]->getBadge())->toBe($initialAuthenticatedCount + 3);
 
     // Test audit filters
     livewire(Users\Pages\ListUsers::class)

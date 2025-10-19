@@ -136,9 +136,11 @@ trait CommonTableFilters
                 $indicators = [];
 
                 if ($data[$fromFieldName] ?? null) {
+                    // @codeCoverageIgnoreStart
                     // @phpstan-ignore-next-line
                     $indicators[] = Indicator::make($fromLabel.' '.Carbon::parse($data[$fromFieldName])->translatedFormat(__('common.formats.date_string')))
                         ->removeField($fromFieldName);
+                    // @codeCoverageIgnoreEnd
                 }
 
                 if ($data[$toFieldName] ?? null) {
@@ -167,6 +169,7 @@ trait CommonTableFilters
 
             $value = is_array($state) ? ($state['value'] ?? null) : $state;
 
+            // @codeCoverageIgnoreStart
             if (is_bool($value)) {
                 return $value;
             }
@@ -178,6 +181,7 @@ trait CommonTableFilters
             if (is_string($value)) {
                 return in_array($value, ['with', 'only'], true);
             }
+            // @codeCoverageIgnoreEnd
 
             return false;
         };

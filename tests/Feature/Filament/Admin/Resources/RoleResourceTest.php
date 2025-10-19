@@ -395,3 +395,60 @@ it('syncs permissions when editing a role', function (): void {
         ->not->toContain($viewRolePermission->name)
         ->toHaveCount(2);
 });
+
+it('returns permission prefixes as array', function (): void {
+    $prefixes = RoleResource::getPermissionPrefixes();
+
+    expect($prefixes)->toBeArray();
+});
+
+it('permission prefixes contain standard CRUD prefixes', function (): void {
+    $prefixes = RoleResource::getPermissionPrefixes();
+
+    expect($prefixes)
+        ->toContain('view')
+        ->toContain('view_any')
+        ->toContain('create')
+        ->toContain('update')
+        ->toContain('delete')
+        ->toContain('delete_any');
+});
+
+it('permission prefixes count is exactly 6', function (): void {
+    $prefixes = RoleResource::getPermissionPrefixes();
+
+    expect($prefixes)->toHaveCount(6);
+});
+
+it('permission prefixes are in expected order', function (): void {
+    $prefixes = RoleResource::getPermissionPrefixes();
+
+    $expectedPrefixes = [
+        'view',
+        'view_any',
+        'create',
+        'update',
+        'delete',
+        'delete_any',
+    ];
+
+    expect($prefixes)->toBe($expectedPrefixes);
+});
+
+it('permission prefixes are all strings', function (): void {
+    $prefixes = RoleResource::getPermissionPrefixes();
+
+    foreach ($prefixes as $prefix) {
+        expect($prefix)->toBeString();
+    }
+});
+
+it('permission prefixes do not contain restore or force delete', function (): void {
+    $prefixes = RoleResource::getPermissionPrefixes();
+
+    expect($prefixes)
+        ->not->toContain('restore')
+        ->not->toContain('restore_any')
+        ->not->toContain('force_delete')
+        ->not->toContain('force_delete_any');
+});

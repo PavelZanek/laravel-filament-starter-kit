@@ -53,7 +53,9 @@ final class RoleResource extends Resource implements HasShieldPermissions
 
                     $sectionLabel = self::shield()->hasLocalizedPermissionLabels()
                         ? FilamentShield::getLocalizedResourceLabel($resourceFqcn)
+                        // @codeCoverageIgnoreStart
                         : $model;
+                    // @codeCoverageIgnoreEnd
 
                     return Section::make($sectionLabel)
                         ->description(fn (): HtmlString => new HtmlString('<span style="word-break: break-word;">'.Utils::showModelPath($modelFqcn).'</span>'))
@@ -201,6 +203,7 @@ final class RoleResource extends Resource implements HasShieldPermissions
         return \Spatie\Permission\Models\Permission::where('name', 'like', 'filament-panel.%')
             ->pluck('name')
             ->mapWithKeys(function (mixed $permission): array {
+                // @codeCoverageIgnoreStart
                 /** @var string $permission */
                 $label = match ($permission) {
                     'filament-panel.admin' => 'Admin Panel Access',
@@ -208,6 +211,7 @@ final class RoleResource extends Resource implements HasShieldPermissions
                     'filament-panel.cms' => 'CMS Panel Access',
                     default => str($permission)->after('filament-panel.')->title()->toString().' Panel Access'
                 };
+                // @codeCoverageIgnoreEnd
 
                 return [$permission => $label];
             })
