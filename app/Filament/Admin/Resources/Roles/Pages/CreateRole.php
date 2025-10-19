@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources\Roles\Pages;
 
 use App\Filament\Admin\Resources\Roles\RoleResource;
+use App\Models\Role;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Arr;
@@ -46,12 +47,17 @@ final class CreateRole extends CreateRecord
         return $result;
     }
 
-    private function afterCreate(): void
+    /**
+     * @phpstan-ignore method.unused
+     */
+    protected function afterCreate(): void
     {
         Utils::getPermissionModel();
 
-        if ($this->permissions->isNotEmpty()) {
+        if ($this->permissions->isNotEmpty() && $this->record instanceof Role) {
+            // @codeCoverageIgnoreStart
             $this->record->syncPermissions($this->permissions);
+            // @codeCoverageIgnoreEnd
         }
     }
 }

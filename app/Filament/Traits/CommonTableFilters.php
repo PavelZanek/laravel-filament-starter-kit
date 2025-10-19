@@ -122,9 +122,13 @@ trait CommonTableFilters
                 /** @var string|null $until */
                 $until = $data[$toFieldName] ?? null;
 
+                // Get the table name from the model to avoid ambiguous column errors in joins
+                $table = $query->getModel()->getTable();
+                $qualifiedColumn = "{$table}.{$column}";
+
                 return $query
-                    ->when($from, fn (Builder $query) => $query->whereDate($column, '>=', $from))
-                    ->when($until, fn (Builder $query) => $query->whereDate($column, '<=', $until));
+                    ->when($from, fn (Builder $query) => $query->whereDate($qualifiedColumn, '>=', $from))
+                    ->when($until, fn (Builder $query) => $query->whereDate($qualifiedColumn, '<=', $until));
             });
 
         if ($withIndicators) {

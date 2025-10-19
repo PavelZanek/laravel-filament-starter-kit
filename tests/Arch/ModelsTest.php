@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 arch('models')
-    ->expect('App\Models')
+    ->expect(getModels())
     ->toHaveMethod('casts')
     ->toExtend('Illuminate\Database\Eloquent\Model')
     ->toOnlyBeUsedIn([
@@ -25,8 +25,8 @@ arch('models')
         'App\Services',
         'Database\Factories',
     ])->ignoring([
-        'App\Models\User',
-        'App\Models\Role',
+        App\Models\User::class,
+        App\Models\Role::class,
     ]);
 
 arch('ensure factories', function (): void {

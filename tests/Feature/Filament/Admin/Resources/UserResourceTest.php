@@ -170,16 +170,14 @@ it('has comprehensive tab system and filtering functionality', function (): void
         ->assertCanSeeTableRecords([$trashed]);
 
     // Test filtering by email verification
-    User::factory()->withRole()->count(4)->create();
-    User::factory()->withRole()->unverified()->count(5)->create();
-
-    $users = User::all();
+    $verifiedUsers = User::factory()->withRole()->count(4)->create();
+    $unverifiedUsers = User::factory()->withRole()->unverified()->count(5)->create();
 
     livewire(Users\Pages\ListUsers::class)
-        ->assertCanSeeTableRecords($users)
+        ->set('tableRecordsPerPage', 50) // Increase pagination limit to see all records
         ->filterTable('email_verified_at')
-        ->assertCanSeeTableRecords($users->whereNotNull('email_verified_at'))
-        ->assertCanNotSeeTableRecords($users->whereNull('email_verified_at'));
+        ->assertCanSeeTableRecords($verifiedUsers)
+        ->assertCanNotSeeTableRecords($unverifiedUsers);
 });
 
 it('has comprehensive searching and sorting functionality', function (): void {

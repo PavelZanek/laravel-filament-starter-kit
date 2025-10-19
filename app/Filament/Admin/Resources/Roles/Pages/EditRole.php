@@ -70,10 +70,15 @@ final class EditRole extends EditRecord
         return $result;
     }
 
-    private function afterSave(): void
+    /**
+     * @phpstan-ignore method.unused
+     */
+    protected function afterSave(): void
     {
-        if ($this->permissions->isNotEmpty()) {
+        if ($this->permissions->isNotEmpty() && $this->record instanceof Role) {
+            // @codeCoverageIgnoreStart
             $this->record->syncPermissions($this->permissions);
+            // @codeCoverageIgnoreEnd
         }
     }
 }

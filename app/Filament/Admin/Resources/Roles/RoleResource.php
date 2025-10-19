@@ -14,6 +14,7 @@ use App\Filament\Traits\CommonTableColumns;
 use App\Filament\Traits\CommonTableFilters;
 use App\Models\Role;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use BezhanSalleh\FilamentShield\Traits\HasShieldFormComponents;
 use Exception;
@@ -36,21 +37,26 @@ final class RoleResource extends Resource implements HasShieldPermissions
     protected static ?string $recordTitleAttribute = 'name';
 
     /**
-     * @return array<Section>
+     * @return array<int, Section>
      */
     public static function getResourceEntitiesSchema(): array
     {
         // Use FilamentShield's getResources() which properly discovers all resources
-        return collect(\BezhanSalleh\FilamentShield\Facades\FilamentShield::getResources())
+        /** @var array<int, Section> */
+        return collect(FilamentShield::getResources())
             ->map(
-                function (array $entity): Section { // @phpstan-ignore argument.type
-                    /** @var array{resourceFqcn:string,model:string,modelFqcn:string,permissions:array} $entity */
+                function (mixed $entity): Section {
+                    /** @var array{resourceFqcn:string,model:string,modelFqcn:string,permissions:array<string>} $entity */
+                    $resourceFqcn = $entity['resourceFqcn'];
+                    $model = $entity['model'];
+                    $modelFqcn = $entity['modelFqcn'];
+
                     $sectionLabel = self::shield()->hasLocalizedPermissionLabels()
-                        ? \BezhanSalleh\FilamentShield\Facades\FilamentShield::getLocalizedResourceLabel($entity['resourceFqcn'])
-                        : $entity['model'];
+                        ? FilamentShield::getLocalizedResourceLabel($resourceFqcn)
+                        : $model;
 
                     return Section::make($sectionLabel)
-                        ->description(fn (): HtmlString => new HtmlString('<span style="word-break: break-word;">'.Utils::showModelPath($entity['modelFqcn']).'</span>'))
+                        ->description(fn (): HtmlString => new HtmlString('<span style="word-break: break-word;">'.Utils::showModelPath($modelFqcn).'</span>'))
                         ->compact()
                         ->schema([
                             self::getCheckBoxListComponentForResource($entity),

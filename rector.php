@@ -33,8 +33,8 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__.'/tests/Feature/Http/Middleware/FilamentAuthenticateRedirectTest.php',
         ],
         PrivatizeFinalClassMethodRector::class => [
-            __DIR__.'/app/Filament/Admin/Resources/RoleResource/Pages/CreateRole.php',
-            __DIR__.'/app/Filament/Admin/Resources/RoleResource/Pages/EditRole.php',
+            __DIR__.'/app/Filament/Admin/Resources/Roles/Pages/CreateRole.php',
+            __DIR__.'/app/Filament/Admin/Resources/Roles/Pages/EditRole.php',
         ],
         RemoveUnusedPublicMethodParameterRector::class => [
             __DIR__.'/app/Policies',

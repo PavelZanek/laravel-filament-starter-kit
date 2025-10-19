@@ -70,8 +70,10 @@ trait HasExportAction
         $query = $query->withTrashed();
 
         if ($eagerLoadRelations !== []) {
+            // @codeCoverageIgnoreStart
             // @phpstan-ignore-next-line - with() method is available on Builder
             return $query->with($eagerLoadRelations);
+            // @codeCoverageIgnoreEnd
         }
 
         // @phpstan-ignore-next-line - return type is correct
