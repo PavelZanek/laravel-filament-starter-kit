@@ -51,7 +51,8 @@ final class RoleForm
                             ->columns([
                                 'sm' => 2,
                                 'lg' => 3,
-                            ]),
+                            ])
+                            ->columnSpanFull(),
                     ]),
                 RoleResource::getShieldFormComponents(),
             ]);
