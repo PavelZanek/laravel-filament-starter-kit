@@ -6,9 +6,9 @@ This repository is a **Starter Kit** (sometimes referred to as a Boilerplate or 
 
 ## Overview
 
-- **Laravel 11.x** using [Laravel Sail](https://laravel.com/docs/sail) for local containerized development (but feel free to adapt for other environments such as Herd, etc.).
-- **Filament v3** pre-installed with multiple panels (Auth, App, Admin) and a custom language switcher.
-- **Livewire v3**, **Alpine.js**, and **Tailwind CSS** for interactive frontend components.
+- **Laravel 12.x** using [Laravel Sail](https://laravel.com/docs/sail) for local containerized development (but feel free to adapt for other environments such as Herd, etc.).
+- **Filament v4** pre-installed with multiple panels (Auth, App, Admin) and a custom language switcher.
+- **Livewire v3**, **Alpine.js**, and **Tailwind CSS v4** for interactive frontend components.
 - **Database transactions** enabled by default for Filament actions.
 - **Database notifications** enabled by default for Filament.
 - **SPA (Single Page App)** mode for Filament also enabled by default.
@@ -38,7 +38,7 @@ This repository is a **Starter Kit** (sometimes referred to as a Boilerplate or 
 
 - **PHP 8.3+**
 - **Docker** & **Docker Compose** (if using Laravel Sail)
-- [Node.js](https://nodejs.org/) (recommended 18+) & [npm](https://www.npmjs.com/) for frontend assets
+- [Node.js](https://nodejs.org/) (recommended 22+) & [npm](https://www.npmjs.com/) for frontend assets
 
 ## Getting Started
 
