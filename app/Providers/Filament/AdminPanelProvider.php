@@ -62,6 +62,7 @@ final class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->unsavedChangesAlerts()
             ->spa()
+            ->globalSearch(false)
             ->login()
             ->userMenuItems($userMenuItems)
             ->viteTheme('resources/css/filament/admin/theme.css')
