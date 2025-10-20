@@ -67,7 +67,7 @@ final class AppServiceProvider extends ServiceProvider
 
         // Authenticate::redirectUsing(fn (): string => Filament::getPanel('auth')->route('auth.login'));
 
-        $this->configureCommands();
+        // $this->configureCommands();
         $this->configureModels();
         $this->configureUrl();
         $this->configureDates();
