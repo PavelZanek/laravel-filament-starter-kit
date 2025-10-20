@@ -68,6 +68,13 @@ test('cannot access admin panel without access_admin_panel permission', function
     expect($user->canAccessPanel($panel))->toBeFalse();
 });
 
+test('can access auth panel without any permission', function (string $role): void {
+    $user = User::factory()->withWorkspaces()->withRole($role)->create();
+    $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('auth')->getMock();
+
+    expect($user->canAccessPanel($panel))->toBeTrue();
+})->with([Role::AUTHENTICATED, Role::ADMIN, Role::SUPER_ADMIN]);
+
 test('cannot access invalid tenant', function (): void {
     $user = User::factory()->create();
     $invalidTenant = new class extends Illuminate\Database\Eloquent\Model {};

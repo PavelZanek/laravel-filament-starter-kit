@@ -24,7 +24,6 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -58,8 +57,6 @@ final class UserTable
                 TextColumn::make('roles.name')
                     ->label(__('admin/user-resource.custom_attributes.role'))
                     ->badge()
-                    // @phpstan-ignore-next-line
-                    ->hidden(fn (HasTable $livewire): bool => $livewire->activeTab !== 'all')
                     ->searchable()
                     ->sortable(),
                 IconColumn::make('is_deleted')

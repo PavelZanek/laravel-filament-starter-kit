@@ -117,6 +117,7 @@ final class UserFactory extends Factory
             Role::SUPER_ADMIN, Role::ADMIN => [
                 'access_admin_panel',
                 'access_app_panel',
+                'widget_UserStatsOverview',
             ],
             Role::AUTHENTICATED => [
                 'access_app_panel',

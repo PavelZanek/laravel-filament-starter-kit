@@ -100,6 +100,9 @@ class ShieldSeeder extends Seeder
             'force_delete_user',
             'force_delete_any_user',
 
+            // Widget permissions
+            'widget_UserStatsOverview',
+
             // Panel access permissions
             'access_admin_panel',
             'access_app_panel',
