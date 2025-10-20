@@ -60,8 +60,8 @@ trait CommonTableFilters
             toLabel: __('common.created_until'),
             withIndicators: true,
             defaultToValue: now(),
-            columns: 2,
-            columnSpan: 2
+            columns: 1,
+            columnSpan: 1
         );
     }
 

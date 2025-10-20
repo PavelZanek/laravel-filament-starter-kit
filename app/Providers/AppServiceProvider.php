@@ -61,8 +61,12 @@ final class AppServiceProvider extends ServiceProvider
             FilamentAuthenticateRedirect::class,
         );
 
-        Gate::before(function (User $user): ?bool {
-            return $user->hasRole(Role::SUPER_ADMIN) ? true : null;
+        //        Gate::before(function (User $user): ?bool {
+        //            return $user->hasRole(Role::SUPER_ADMIN) ? true : null;
+        //        });
+
+        Gate::guessPolicyNamesUsing(function (string $modelClass) {
+            return str_replace('Models', 'Policies', $modelClass).'Policy';
         });
 
         // Authenticate::redirectUsing(fn (): string => Filament::getPanel('auth')->route('auth.login'));
@@ -84,10 +88,13 @@ final class AppServiceProvider extends ServiceProvider
 
     /*
      * Configure the application's commands.
+     * @phpstan-ignore-next-line
      */
     private function configureCommands(): void
     {
+        // @codeCoverageIgnoreStart
         DB::prohibitDestructiveCommands($this->app->isProduction());
+        // @codeCoverageIgnoreEnd
     }
 
     /*

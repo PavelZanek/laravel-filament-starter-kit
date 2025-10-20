@@ -12,6 +12,7 @@ use App\Models\Role;
 use Exception;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\ViewAction;
@@ -86,14 +87,10 @@ final class RoleTable
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
-                    DeleteAction::make()
-                        ->visible(fn (Role $record): bool => auth()->user()?->can('delete', $record)
-                            && ! $record->is_default
-                        ),
-                    RestoreAction::make()
-                        ->visible(fn (Role $record): bool => $record->trashed() && ! $record->is_default && Gate::allows('restore', $record)),
-                    ForceDeleteAction::make()
-                        ->visible(fn (Role $record): bool => $record->trashed() && ! $record->is_default && Gate::allows('forceDelete', $record)),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                    RestoreAction::make(),
+                    ForceDeleteAction::make(),
                 ]),
             ])
             ->headerActions([

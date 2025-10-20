@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
 use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
 use Rector\Set\ValueObject\SetList;
@@ -38,6 +39,9 @@ return static function (RectorConfig $rectorConfig): void {
         ],
         RemoveUnusedPublicMethodParameterRector::class => [
             __DIR__.'/app/Policies',
+        ],
+        RemoveUnusedPrivateMethodRector::class => [
+            __DIR__.'/app/Providers/AppServiceProvider.php',
         ],
     ]);
 

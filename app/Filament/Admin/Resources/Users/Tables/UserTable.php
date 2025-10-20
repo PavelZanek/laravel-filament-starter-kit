@@ -13,6 +13,7 @@ use App\Models\User;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -167,11 +168,9 @@ final class UserTable
                         ->icon('heroicon-o-shield-check')
                         ->visible(fn (User $record): bool => ! $record->hasRole(Role::SUPER_ADMIN)),
 
-                    RestoreAction::make()
-                        ->visible(fn (User $record): bool => $record->trashed() && ! $record->hasRole(Role::SUPER_ADMIN) && Gate::allows('restore', $record)),
-
-                    ForceDeleteAction::make()
-                        ->visible(fn (User $record): bool => $record->trashed() && ! $record->hasRole(Role::SUPER_ADMIN) && Gate::allows('forceDelete', $record)),
+                    DeleteAction::make(),
+                    RestoreAction::make(),
+                    ForceDeleteAction::make(),
                 ]),
             ])
             ->headerActions([

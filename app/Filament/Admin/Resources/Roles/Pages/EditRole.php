@@ -28,8 +28,7 @@ final class EditRole extends EditRecord
         /** @var Role $record */
         $record = $parameters['record'];
 
-        return auth()->user()?->can('update', RoleResource::getModel())
-            && ! $record->is_default;
+        return auth()->user()?->can('update', $record);
     }
 
     protected function getActions(): array

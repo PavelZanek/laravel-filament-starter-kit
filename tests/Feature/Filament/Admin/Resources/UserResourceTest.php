@@ -8,7 +8,7 @@ use App\Filament\Admin\Resources\Users;
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Models\Role;
 use App\Models\User;
-use Database\Seeders\RoleSeeder;
+use Database\Seeders\ShieldSeeder;
 use Filament\Actions\DeleteAction;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +19,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
-    $this->seed(RoleSeeder::class);
+    $this->seed(ShieldSeeder::class);
 
     Filament::setCurrentPanel(Filament::getPanel('admin'));
 
@@ -252,23 +252,24 @@ it('supports comprehensive CRUD operations with validation and actions', functio
         ]);
 
     // Test edit page rendering and data retrieval
+    $editableUser = User::factory()->withRole(Role::ADMIN)->create();
     $this->get(UserResource::getUrl('edit', [
-        'record' => $this->user->getRouteKey(),
+        'record' => $editableUser->getRouteKey(),
     ]))->assertSuccessful();
 
     livewire(Users\Pages\EditUser::class, [
-        'record' => $this->user->getRouteKey(),
+        'record' => $editableUser->getRouteKey(),
     ])
         ->assertFormSet([
-            'name' => $this->user->name,
-            'email' => $this->user->email,
+            'name' => $editableUser->name,
+            'email' => $editableUser->email,
         ]);
 
     // Test successful editing
     $newUserData = User::factory()->make();
 
     livewire(Users\Pages\EditUser::class, [
-        'record' => $this->user->getRouteKey(),
+        'record' => $editableUser->getRouteKey(),
     ])
         ->fillForm([
             'name' => $newUserData->name,
@@ -277,7 +278,7 @@ it('supports comprehensive CRUD operations with validation and actions', functio
         ->call('save')
         ->assertHasNoFormErrors();
 
-    expect($this->user->refresh())
+    expect($editableUser->refresh())
         ->name->toBe($newUserData->name)
         ->email->toBe($newUserData->email);
 
@@ -289,10 +290,10 @@ it('supports comprehensive CRUD operations with validation and actions', functio
         ['user' => $testUser, 'field' => 'name', 'value' => null, 'error' => 'required'],
         ['user' => $testUser, 'field' => 'email', 'value' => null, 'error' => 'required'],
         ['user' => $testUser, 'field' => 'roles', 'value' => null, 'error' => 'required'],
-        ['user' => $otherUser, 'field' => 'email', 'value' => $this->user->email, 'error' => 'unique'],
-        ['user' => $this->user, 'field' => 'email', 'value' => Str::random(), 'error' => 'email'],
-        ['user' => $this->user, 'field' => 'name', 'value' => Str::random(256), 'error' => 'max:255'],
-        ['user' => $this->user, 'field' => 'email', 'value' => Str::random(256), 'error' => 'max:255'],
+        ['user' => $otherUser, 'field' => 'email', 'value' => $editableUser->email, 'error' => 'unique'],
+        ['user' => $editableUser, 'field' => 'email', 'value' => Str::random(), 'error' => 'email'],
+        ['user' => $editableUser, 'field' => 'name', 'value' => Str::random(256), 'error' => 'max:255'],
+        ['user' => $editableUser, 'field' => 'email', 'value' => Str::random(256), 'error' => 'max:255'],
     ];
 
     // Skip edit validation test due to Filament v4 save action changes
@@ -316,11 +317,10 @@ it('supports comprehensive CRUD operations with validation and actions', functio
 
     $this->assertSoftDeleted($userToDelete);
 
-    // Test super admin user cannot be deleted
-    livewire(Users\Pages\EditUser::class, [
+    // Test super admin user cannot be edited (which also prevents deletion)
+    $this->get(UserResource::getUrl('edit', [
         'record' => $this->user->getRouteKey(),
-    ])
-        ->assertActionHidden(DeleteAction::class);
+    ]))->assertForbidden();
 });
 
 it('handles advanced user actions and role management correctly', function (): void {

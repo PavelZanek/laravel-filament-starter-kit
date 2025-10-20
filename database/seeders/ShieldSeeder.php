@@ -47,10 +47,15 @@ class ShieldSeeder extends Seeder
             $permissionModel = Utils::getPermissionModel();
 
             foreach ($rolePlusPermissions as $rolePlusPermission) {
-                $role = $roleModel::firstOrCreate([
-                    'name' => $rolePlusPermission['name'],
-                    'guard_name' => $rolePlusPermission['guard_name'],
-                ]);
+                $role = $roleModel::firstOrCreate(
+                    [
+                        'name' => $rolePlusPermission['name'],
+                        'guard_name' => $rolePlusPermission['guard_name'],
+                    ],
+                    [
+                        'is_default' => $rolePlusPermission['is_default'] ?? false,
+                    ]
+                );
 
                 if (! blank($rolePlusPermission['permissions'])) {
                     $permissionModels = collect($rolePlusPermission['permissions'])
@@ -112,16 +117,19 @@ class ShieldSeeder extends Seeder
             [
                 'name' => 'super_admin',
                 'guard_name' => 'web',
+                'is_default' => true,
                 'permissions' => $adminPermissions,
             ],
             [
                 'name' => 'admin',
                 'guard_name' => 'web',
+                'is_default' => true,
                 'permissions' => $adminPermissions,
             ],
             [
                 'name' => 'authenticated',
                 'guard_name' => 'web',
+                'is_default' => true,
                 'permissions' => [
                     'access_app_panel',
                 ],

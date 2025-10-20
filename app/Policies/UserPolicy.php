@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -38,17 +39,17 @@ final readonly class UserPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, User $model): bool
     {
-        return $user->can('update_user');
+        return $user->can('update_user') && ! $model->hasRole(Role::SUPER_ADMIN);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user): bool
+    public function delete(User $user, User $model): bool
     {
-        return $user->can('delete_user');
+        return $user->can('delete_user') && ! $model->hasRole(Role::SUPER_ADMIN);
     }
 
     /**
@@ -62,9 +63,9 @@ final readonly class UserPolicy
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user): bool
+    public function forceDelete(User $user, User $model): bool
     {
-        return $user->can('force_delete_user');
+        return $user->can('force_delete_user') && ! $model->hasRole(Role::SUPER_ADMIN);
     }
 
     /**
@@ -78,9 +79,9 @@ final readonly class UserPolicy
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user): bool
+    public function restore(User $user, User $model): bool
     {
-        return $user->can('restore_user');
+        return $user->can('restore_user') && ! $model->hasRole(Role::SUPER_ADMIN);
     }
 
     /**
@@ -92,11 +93,11 @@ final readonly class UserPolicy
     }
 
     /**
-     * Determine whether the user can bulk restore.
+     * Determine whether the user can replicate.
      */
-    public function replicate(User $user): bool
+    public function replicate(User $user, User $model): bool
     {
-        return $user->can('replicate_user');
+        return $user->can('replicate_user') && ! $model->hasRole(Role::SUPER_ADMIN);
     }
 
     /**

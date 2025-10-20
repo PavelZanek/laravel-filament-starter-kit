@@ -24,10 +24,7 @@ final class DatabaseSeeder extends Seeder
         }
 
         $this->call([
-            RoleSeeder::class,
             ShieldSeeder::class,
-            // PermissionSeeder::class,
-            // RolePermissionSeeder::class,
             UserSeeder::class,
             ...$localSeeders,
         ]);
