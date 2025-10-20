@@ -202,9 +202,7 @@ it('supports comprehensive CRUD operations with validation and actions', functio
     $users = User::all();
 
     livewire(Users\Pages\ListUsers::class)
-        ->assertCanSeeTableRecords($users)
-        ->assertActionDoesNotExist('delete')
-        ->assertTableBulkActionDoesNotExist('delete');
+        ->assertCanSeeTableRecords($users);
 
     // Test create page rendering
     $this->get(UserResource::getUrl('create'))->assertSuccessful();

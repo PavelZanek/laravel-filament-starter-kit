@@ -28,7 +28,7 @@ final class EditRole extends EditRecord
         /** @var Role $record */
         $record = $parameters['record'];
 
-        return auth()->user()?->can('update', $record);
+        return auth()->user() ? auth()->user()->can('update', $record) : false;
     }
 
     protected function getActions(): array
