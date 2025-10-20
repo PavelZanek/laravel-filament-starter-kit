@@ -25,9 +25,9 @@ it('allows actions without role parameter when user has permission', function (s
     ['viewAny',        'view_any_role'],
     ['create',         'create_role'],
     ['deleteAny',      'delete_any_role'],
-    ['forceDeleteAny', '{{ ForceDeleteAny }}'],
-    ['restoreAny',     '{{ RestoreAny }}'],
-    ['reorder',        '{{ Reorder }}'],
+    ['forceDeleteAny', 'force_delete_any_role'],
+    ['restoreAny',     'restore_any_role'],
+    ['reorder',        'reorder_role'],
 ]);
 
 it('denies actions without role parameter when user lacks permission', function (string $method, string $permission): void {
@@ -42,9 +42,9 @@ it('denies actions without role parameter when user lacks permission', function 
     ['viewAny',        'view_any_role'],
     ['create',         'create_role'],
     ['deleteAny',      'delete_any_role'],
-    ['forceDeleteAny', '{{ ForceDeleteAny }}'],
-    ['restoreAny',     '{{ RestoreAny }}'],
-    ['reorder',        '{{ Reorder }}'],
+    ['forceDeleteAny', 'force_delete_any_role'],
+    ['restoreAny',     'restore_any_role'],
+    ['reorder',        'reorder_role'],
 ]);
 
 it('allows view when user has view_role permission', function (): void {
@@ -72,7 +72,7 @@ it('denies view when user lacks view_role permission', function (): void {
 });
 
 foreach ([
-    'replicate' => '{{ Replicate }}',
+    'replicate' => 'replicate_role',
 ] as $method => $permission) {
     it("allows {$method} when user has permission", function () use ($method, $permission): void {
         $user = Mockery::mock(User::class);
@@ -100,8 +100,8 @@ foreach ([
 foreach ([
     'update' => 'update_role',
     'delete' => 'delete_role',
-    'forceDelete' => '{{ ForceDelete }}',
-    'restore' => '{{ Restore }}',
+    'forceDelete' => 'force_delete_role',
+    'restore' => 'restore_role',
 ] as $method => $permission) {
     it("allows {$method} when user has permission and role is not default", function () use ($method, $permission): void {
         $user = Mockery::mock(User::class);

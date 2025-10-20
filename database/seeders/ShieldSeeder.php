@@ -31,8 +31,8 @@ class ShieldSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $rolesWithPermissions = '[{"name":"super_admin","guard_name":"web","permissions":["view_role","view_any_role","create_role","update_role","delete_role","delete_any_role","view_user","view_any_user","create_user","update_user","restore_user","restore_any_user","replicate_user","reorder_user","delete_user","delete_any_user","force_delete_user","force_delete_any_user","page_EditProfile"]},{"name":"admin","guard_name":"web","permissions":["view_role","view_any_role","create_role","update_role","delete_role","delete_any_role","view_user","view_any_user","create_user","update_user","restore_user","restore_any_user","replicate_user","reorder_user","delete_user","delete_any_user","force_delete_user","force_delete_any_user","page_EditProfile"]},{"name":"authenticated","guard_name":"web","permissions":[]}]';
-        $directPermissions = '[]';
+        $rolesWithPermissions = $this->getRolesWithPermissions();
+        $directPermissions = $this->getDirectPermissions();
 
         static::makeRolesWithPermissions($rolesWithPermissions);
         static::makeDirectPermissions($directPermissions);
@@ -64,5 +64,77 @@ class ShieldSeeder extends Seeder
                 }
             }
         }
+    }
+
+    /**
+     * Get roles with their permissions configuration.
+     */
+    private function getRolesWithPermissions(): string
+    {
+        $adminPermissions = [
+            // Role permissions
+            'view_role',
+            'view_any_role',
+            'create_role',
+            'update_role',
+            'delete_role',
+            'delete_any_role',
+            'restore_role',
+            'restore_any_role',
+            'replicate_role',
+            'reorder_role',
+            'force_delete_role',
+            'force_delete_any_role',
+
+            // User permissions
+            'view_user',
+            'view_any_user',
+            'create_user',
+            'update_user',
+            'delete_user',
+            'delete_any_user',
+            'restore_user',
+            'restore_any_user',
+            'replicate_user',
+            'reorder_user',
+            'force_delete_user',
+            'force_delete_any_user',
+
+            // Panel access permissions
+            'access_admin_panel',
+            'access_app_panel',
+        ];
+
+        $roles = [
+            [
+                'name' => 'super_admin',
+                'guard_name' => 'web',
+                'permissions' => $adminPermissions,
+            ],
+            [
+                'name' => 'admin',
+                'guard_name' => 'web',
+                'permissions' => $adminPermissions,
+            ],
+            [
+                'name' => 'authenticated',
+                'guard_name' => 'web',
+                'permissions' => [
+                    'access_app_panel',
+                ],
+            ],
+        ];
+
+        return json_encode($roles);
+    }
+
+    /**
+     * Get direct permissions configuration.
+     */
+    private function getDirectPermissions(): string
+    {
+        $permissions = [];
+
+        return json_encode($permissions);
     }
 }

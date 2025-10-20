@@ -4,20 +4,29 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Filament\Pages;
 
-use App\Filament\Pages\EditProfile;
+use App\Filament\Admin\Pages\EditProfile as AdminEditProfile;
+use App\Filament\Pages\EditProfile as AppEditProfile;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Hash;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
 
-it('can update profile information', function (): void {
+it('can update profile information', function (string $editProfileClass, string $panelId): void {
     $user = User::factory()->withWorkspaces()->withRole()->create();
     actingAs($user);
 
+    if ($panelId === 'app') {
+        Filament::setCurrentPanel(Filament::getPanel('app'));
+        Filament::setTenant($user->getActiveTenant());
+    } else {
+        Filament::setCurrentPanel(Filament::getPanel('admin'));
+    }
+
     $newData = User::factory()->make();
 
-    livewire(EditProfile::class)
+    livewire($editProfileClass)
         ->assertFormSet([
             'name' => $user->name,
             'email' => $user->email,
@@ -32,22 +41,35 @@ it('can update profile information', function (): void {
     expect($user->fresh())
         ->name->toBe($newData->name)
         ->email->toBe($newData->email);
-});
+})->with([
+    'app panel' => [AppEditProfile::class, 'app'],
+    'admin panel' => [AdminEditProfile::class, 'admin'],
+]);
 
-it('validates profile input', function (): void {
+it('validates profile input', function (string $editProfileClass, string $panelId): void {
     $user = User::factory()->withWorkspaces()->withRole()->create();
     actingAs($user);
 
-    livewire(EditProfile::class)
+    if ($panelId === 'app') {
+        Filament::setCurrentPanel(Filament::getPanel('app'));
+        Filament::setTenant($user->getActiveTenant());
+    } else {
+        Filament::setCurrentPanel(Filament::getPanel('admin'));
+    }
+
+    livewire($editProfileClass)
         ->fillForm([
             'name' => '',
             'email' => 'not-an-email',
         ], 'editProfileForm')
         ->call('updateProfile')
         ->assertHasFormErrors(['name' => 'required', 'email' => 'email'], 'editProfileForm');
-});
+})->with([
+    'app panel' => [AppEditProfile::class, 'app'],
+    'admin panel' => [AdminEditProfile::class, 'admin'],
+]);
 
-it('can update password', function (): void {
+it('can update password', function (string $editProfileClass, string $panelId): void {
     $user = User::factory()
         ->withWorkspaces()
         ->withRole()
@@ -55,9 +77,16 @@ it('can update password', function (): void {
 
     actingAs($user);
 
+    if ($panelId === 'app') {
+        Filament::setCurrentPanel(Filament::getPanel('app'));
+        Filament::setTenant($user->getActiveTenant());
+    } else {
+        Filament::setCurrentPanel(Filament::getPanel('admin'));
+    }
+
     $newPassword = 'new-secure-password';
 
-    livewire(EditProfile::class)
+    livewire($editProfileClass)
         ->fillForm([
             'currentPassword' => 'old-password',
             'password' => $newPassword,
@@ -67,9 +96,12 @@ it('can update password', function (): void {
         ->assertHasNoFormErrors([], 'editPasswordForm');
 
     expect(Hash::check($newPassword, $user->fresh()->password))->toBeTrue();
-});
+})->with([
+    'app panel' => [AppEditProfile::class, 'app'],
+    'admin panel' => [AdminEditProfile::class, 'admin'],
+]);
 
-it('validates password input', function (): void {
+it('validates password input', function (string $editProfileClass, string $panelId): void {
     $user = User::factory()
         ->withWorkspaces()
         ->withRole()
@@ -77,7 +109,14 @@ it('validates password input', function (): void {
 
     actingAs($user);
 
-    livewire(EditProfile::class)
+    if ($panelId === 'app') {
+        Filament::setCurrentPanel(Filament::getPanel('app'));
+        Filament::setTenant($user->getActiveTenant());
+    } else {
+        Filament::setCurrentPanel(Filament::getPanel('admin'));
+    }
+
+    livewire($editProfileClass)
         ->fillForm([
             'currentPassword' => 'wrong-password',
             'password' => 'short',
@@ -89,4 +128,7 @@ it('validates password input', function (): void {
             // 'password' => ['min', 'password'], // TODO
             // 'passwordConfirmation' => 'same', // TODO
         ], 'editPasswordForm');
-});
+})->with([
+    'app panel' => [AppEditProfile::class, 'app'],
+    'admin panel' => [AdminEditProfile::class, 'admin'],
+]);

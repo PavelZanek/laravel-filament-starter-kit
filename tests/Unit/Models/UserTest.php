@@ -33,36 +33,36 @@ it('may have workspaces', function (): void {
     expect($user->workspaces)->toHaveCount(3);
 });
 
-test('can always access auth panel', function (): void {
-    $user = User::factory()->create();
-    $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('auth')->getMock();
-
-    expect($user->canAccessPanel($panel))->toBeTrue();
-});
-
-test('cannot access panel with unknown id', function (): void {
+test('cannot access unknown panel', function (): void {
     $user = User::factory()->create();
     $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('unknown')->getMock();
 
     expect($user->canAccessPanel($panel))->toBeFalse();
 });
 
-test('can access app panel', function (): void {
-    $user = User::factory()->withWorkspaces()->withRole()->create();
+test('can access app panel with access_app_panel permission', function (string $role): void {
+    $user = User::factory()->withWorkspaces()->withRole($role)->create();
     $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('app')->getMock();
 
     expect($user->canAccessPanel($panel))->toBeTrue();
+})->with([Role::AUTHENTICATED, Role::ADMIN, Role::SUPER_ADMIN]);
+
+test('cannot access app panel without access_app_panel permission', function (): void {
+    $user = User::factory()->create();
+    $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('app')->getMock();
+
+    expect($user->canAccessPanel($panel))->toBeFalse();
 });
 
-test('can access admin panel', function (string $role): void {
+test('can access admin panel with access_admin_panel permission', function (string $role): void {
     $user = User::factory()->withWorkspaces()->withRole($role)->create();
     $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('admin')->getMock();
 
     expect($user->canAccessPanel($panel))->toBeTrue();
 })->with([Role::ADMIN, Role::SUPER_ADMIN]);
 
-test('denies user with disallowed email to view admin panel', function (): void {
-    $user = User::factory()->withWorkspaces()->withRole()->create();
+test('cannot access admin panel without access_admin_panel permission', function (): void {
+    $user = User::factory()->withWorkspaces()->withRole(Role::AUTHENTICATED)->create();
     $panel = mock(Panel::class)->shouldReceive('getId')->andReturn('admin')->getMock();
 
     expect($user->canAccessPanel($panel))->toBeFalse();

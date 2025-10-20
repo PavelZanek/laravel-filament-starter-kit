@@ -110,17 +110,12 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        if ($panel->getId() === 'auth') {
-            return true;
-        }
-
-        if ($panel->getId() === 'app'
-            && $this->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN, Role::AUTHENTICATED)
-        ) {
-            return true;
-        }
-
-        return $panel->getId() === 'admin' && $this->hasAnyRole(Role::SUPER_ADMIN, Role::ADMIN);
+        return match ($panel->getId()) {
+            'admin' => $this->can('access_admin_panel'),
+            'app' => $this->can('access_app_panel'),
+            'auth' => true,
+            default => false,
+        };
     }
 
     /**

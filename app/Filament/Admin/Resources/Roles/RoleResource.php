@@ -217,4 +217,21 @@ final class RoleResource extends Resource implements HasShieldPermissions
             })
             ->toArray();
     }
+
+    /**
+     * Override to exclude EditProfile page from permissions
+     * EditProfile should be accessible to all authenticated users
+     *
+     * @return array<int|string, string>
+     */
+    public static function getPageOptions(): array
+    {
+        /** @var array<int|string, string> $pageOptions */
+        $pageOptions = collect(FilamentShield::getPages())
+            ->flatMap(fn (mixed $page): array => $page['permissions']) // @phpstan-ignore-line
+            ->reject(fn (string $permission, string $key): bool => str($key)->contains('edit_profile'))
+            ->toArray();
+
+        return $pageOptions;
+    }
 }

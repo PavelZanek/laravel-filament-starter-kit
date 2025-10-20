@@ -29,6 +29,7 @@ arch('avoid open for extension')
         'App\Models\Role',
         'App\Models\Permission',
         'App\Http\Middleware\FilamentAuthenticateRedirect',
+        'App\Filament\Pages\EditProfileBase',
     ]);
 
 arch('ensure no extends')
@@ -37,6 +38,7 @@ arch('ensure no extends')
     ->not->toBeAbstract()
     ->ignoring([
         'App\Http\Controllers\Controller',
+        'App\Filament\Pages\EditProfileBase',
     ]);
 
 arch('avoid mutation')

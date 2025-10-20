@@ -49,13 +49,8 @@ final class AdminPanelProvider extends PanelProvider
                         }
                     ),
                 'profile' => MenuItem::make()
-                    ->url(
-                        function (): string {
-                            return Filament::getPanel('app')->route('pages.edit-profile', [
-                                'tenant' => Auth::user()?->getActiveTenant(),
-                            ]);
-                        }
-                    ),
+                    ->icon('heroicon-o-user-circle')
+                    ->url(fn (): string => Filament::getPanel('admin')->route('pages.edit-profile')),
             ];
         }
         // @codeCoverageIgnoreEnd

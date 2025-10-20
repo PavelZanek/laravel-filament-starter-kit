@@ -84,7 +84,44 @@ final class UserFactory extends Factory
                 ]);
             }
 
+            // Create and assign permissions based on role
+            $permissions = $this->getPermissionsForRole($roleName);
+            foreach ($permissions as $permissionName) {
+                $permission = \App\Models\Permission::query()
+                    ->where('name', $permissionName)
+                    ->where('guard_name', $guardName)
+                    ->first();
+
+                if (! $permission) {
+                    $permission = \App\Models\Permission::factory()->create([
+                        'name' => $permissionName,
+                        'guard_name' => $guardName,
+                    ]);
+                }
+
+                $role->givePermissionTo($permission);
+            }
+
             $user->roles()->sync($role);
         });
+    }
+
+    /**
+     * Get permissions for a given role.
+     *
+     * @return array<string>
+     */
+    private function getPermissionsForRole(string $roleName): array
+    {
+        return match ($roleName) {
+            Role::SUPER_ADMIN, Role::ADMIN => [
+                'access_admin_panel',
+                'access_app_panel',
+            ],
+            Role::AUTHENTICATED => [
+                'access_app_panel',
+            ],
+            default => [],
+        };
     }
 }

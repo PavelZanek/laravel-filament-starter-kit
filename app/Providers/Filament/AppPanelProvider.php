@@ -60,6 +60,7 @@ final class AppPanelProvider extends PanelProvider
                     ->visible(fn (): bool => (bool) Auth::user()?->canAccessPanel(Filament::getPanel('admin')))
                     ->url(fn (): string => Filament::getPanel('admin')->route('pages.dashboard')),
                 'profile' => MenuItem::make()
+                    ->icon('heroicon-o-user-circle')
                     ->url(
                         function (): string {
                             return Filament::getPanel('app')->route('pages.edit-profile', [

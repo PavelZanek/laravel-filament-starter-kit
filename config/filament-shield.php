@@ -108,7 +108,10 @@ return [
         ],
     ],
 
-    'custom_permissions' => [],
+    'custom_permissions' => [
+        'access_admin_panel',
+        'access_app_panel',
+    ],
 
     'discovery' => [
         'discover_all_resources' => true,
