@@ -80,9 +80,12 @@ final class RoleTable
                     ->visible(RoleResource::getDeletedAtColumnVisibility()),
                 ...RoleResource::getAuditTableColumns(),
             ])
-            ->filters(
-                RoleResource::getCommonFilters()
-            )
+            ->filters([
+                // @codeCoverageIgnoreStart
+                RoleResource::getCreatedAtFilter(),
+                // @codeCoverageIgnoreEnd
+                ...RoleResource::getCommonFilters(),
+            ])
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
