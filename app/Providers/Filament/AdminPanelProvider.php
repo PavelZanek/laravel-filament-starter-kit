@@ -66,6 +66,7 @@ final class AdminPanelProvider extends PanelProvider
             ->login()
             ->userMenuItems($userMenuItems)
             ->viteTheme('resources/css/filament/admin/theme.css')
+            ->maxContentWidth('full')
             ->colors([
                 'primary' => Color::Indigo,
             ])

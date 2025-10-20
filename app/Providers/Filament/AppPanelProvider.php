@@ -77,6 +77,7 @@ final class AppPanelProvider extends PanelProvider
             //     ApplyTenantScopes::class,
             // ], isPersistent: true)
             ->viteTheme('resources/css/filament/app/theme.css')
+            ->maxContentWidth('full')
             ->colors([
                 'primary' => Color::Emerald,
             ])
